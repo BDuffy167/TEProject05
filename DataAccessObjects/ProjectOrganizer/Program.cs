@@ -4,9 +4,9 @@ using System.IO;
 
 namespace ProjectOrganizer
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             // Get the connection string from the appsettings.json file
             IConfigurationBuilder builder = new ConfigurationBuilder()

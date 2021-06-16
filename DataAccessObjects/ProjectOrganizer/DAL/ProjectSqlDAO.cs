@@ -1,6 +1,7 @@
 ﻿using ProjectOrganizer.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace ProjectOrganizer.DAL
 {
@@ -13,6 +14,10 @@ namespace ProjectOrganizer.DAL
         {
             connectionString = dbConnectionString;
         }
+        private const string SqlSelectAll = "SELECT id, name, from_date, to_date FROM project";
+        private const string SqlInsertEmp = "INSERT INTO project_employee (project_id, employee_id) VALUES (@project_id, @employee_id)";
+        private const string SqlDeleteEmp = "DELETE FROM project_employee WHERE project_id = @project_id AND employee_id = @employee_id";
+        private const string SqCreateProj = "INSERT INTO project (project_id, name, from_date, to_date) VALUES (@project_id, @name, @from_date, @to_date)";
 
         /// <summary>
         /// Returns all projects.
@@ -20,8 +25,42 @@ namespace ProjectOrganizer.DAL
         /// <returns></returns>
         public ICollection<Project> GetAllProjects()
         {
-            throw new NotImplementedException();
+            List<Project> projects = new List<Project>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand command = new SqlCommand(SqlSelectAll, conn);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+
+                        Project project = new Project();
+
+                        // Set the values on the new thing
+                        project.ProjectId = Convert.ToInt32(reader["id"]);
+                        project.Name = Convert.ToString(reader["name"]);
+                        project.StartDate = Convert.ToDateTime(reader["from_date"]);
+                        project.EndDate = Convert.ToDateTime(reader["to_date"]);
+
+                        // Add it to our list of results
+                        projects.Add(project);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Problem getting projects: " + ex.Message);
+            }
+
+            return projects;
         }
+
 
         /// <summary>
         /// Assigns an employee to a project using their IDs.
@@ -31,8 +70,32 @@ namespace ProjectOrganizer.DAL
         /// <returns>If it was successful.</returns>
         public bool AssignEmployeeToProject(int projectId, int employeeId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                {
+                    conn.Open();
+
+                    // Create our insert command
+                    SqlCommand command = new SqlCommand(SqlInsertEmp, conn);
+                    command.Parameters.AddWithValue("@project_id", projectId);
+                    command.Parameters.AddWithValue("@employee_id", employeeId);
+
+
+                    // Run our insert command
+                    command.ExecuteNonQuery();
+
+                    // If we got here, it must have worked
+                    return true;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Could not insert employee: " + ex.Message);
+                return false;
+            }
         }
+
 
         /// <summary>
         /// Removes an employee from a project.
@@ -42,7 +105,30 @@ namespace ProjectOrganizer.DAL
         /// <returns>If it was successful.</returns>
         public bool RemoveEmployeeFromProject(int projectId, int employeeId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                {
+                    conn.Open();
+
+                    // Create our insert command
+                    SqlCommand command = new SqlCommand(SqlDeleteEmp, conn);
+                    command.Parameters.AddWithValue("@project_id", projectId);
+                    command.Parameters.AddWithValue("@employee_id", employeeId);
+
+
+                    // Run our insert command
+                    command.ExecuteNonQuery();
+
+                    // If we got here, it must have worked
+                    return true;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Could not delete employee: " + ex.Message);
+                return false;
+            }
         }
 
         /// <summary>
@@ -51,8 +137,34 @@ namespace ProjectOrganizer.DAL
         /// <param name="newProject">The new project object.</param>
         /// <returns>The new id of the project.</returns>
         public int CreateProject(Project newProject)
-        {
-            throw new NotImplementedException();
+        { 
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                {
+                    conn.Open();
+
+                    // Create our insert command
+                    SqlCommand command = new SqlCommand(SqCreateProj, conn);
+                    command.Parameters.AddWithValue("@project_id", newProject.ProjectId);
+                    command.Parameters.AddWithValue("@from_date", newProject.StartDate);
+                    command.Parameters.AddWithValue("@to_date", newProject.EndDate);
+                    command.Parameters.AddWithValue("@name", newProject.Name);
+
+
+                    // Run our insert command
+                    command.ExecuteNonQuery();
+
+                    // If we got here, it must have worked
+                    return newProject.ProjectId;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Could not insert new project: " + ex.Message);
+                return 0;
+            }
         }
 
     }

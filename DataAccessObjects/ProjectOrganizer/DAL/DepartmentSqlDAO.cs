@@ -1,12 +1,18 @@
 ﻿using ProjectOrganizer.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+
 
 namespace ProjectOrganizer.DAL
 {
     public class DepartmentSqlDAO : IDepartmentDAO
     {
         private readonly string connectionString;
+
+        private const string SqlSelectAll = "SELECT id, name FROM department";
+        private const string SqlInsert = "INSERT INTO department (name) VALUES (@name);";
+        private const string SqlUpdate = "UPDATE department SET name = @name WHERE id = @id";
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -20,7 +26,39 @@ namespace ProjectOrganizer.DAL
         /// <returns></returns>
         public ICollection<Department> GetDepartments()
         {
-            throw new NotImplementedException();
+            List<Department> departments = new List<Department>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand command = new SqlCommand(SqlSelectAll, conn);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+
+                        Department department = new Department();
+
+                        // Set the values on the new thing
+                        department.Id = Convert.ToInt32(reader["id"]);
+                        department.Name = Convert.ToString(reader["name"]);
+
+
+                        // Add it to our list of results
+                        departments.Add(department);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Problem getting departments: " + ex.Message);
+            }
+
+            return departments;
         }
 
         /// <summary>
@@ -30,7 +68,30 @@ namespace ProjectOrganizer.DAL
         /// <returns>The id of the new department (if successful).</returns>
         public int CreateDepartment(Department newDepartment)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                {
+                    conn.Open();
+
+                    // Create our insert command
+                    SqlCommand command = new SqlCommand(SqlInsert, conn);
+                    command.Parameters.AddWithValue("@id", newDepartment.Id);
+                    command.Parameters.AddWithValue("@name", newDepartment.Name);
+
+
+                    // Run our insert command
+                    command.ExecuteNonQuery();
+
+                    // If we got here, it must have worked
+                    return newDepartment.Id;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Could not insert Department: " + ex.Message);
+                return 0;
+            }
         }
 
         /// <summary>
@@ -40,7 +101,30 @@ namespace ProjectOrganizer.DAL
         /// <returns>True, if successful.</returns>
         public bool UpdateDepartment(Department updatedDepartment)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                {
+                    conn.Open();
+
+                    // Create our insert command
+                    SqlCommand command = new SqlCommand(SqlUpdate, conn);
+                    command.Parameters.AddWithValue("@id", updatedDepartment.Id);
+                    command.Parameters.AddWithValue("@name", updatedDepartment.Name);
+
+
+                    // Run our insert command
+                    command.ExecuteNonQuery();
+
+                    // If we got here, it must have worked
+                    return true;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Could not insert Department: " + ex.Message);
+                return false;
+            }
         }
 
     }
