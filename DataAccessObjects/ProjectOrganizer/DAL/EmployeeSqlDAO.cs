@@ -15,9 +15,9 @@ namespace ProjectOrganizer.DAL
             connectionString = dbConnectionString;
         }
 
-        private const string SqlSelectAll = "SELECT id, first_name, last_name, job_title, birth_date, hire_date, department_id FROM employee";
-        private const string SqlSelectSearch = "SELECT first_name, last_name FROM employee WHERE first_name LIKE @first_name OR last_name LIKE @last_name";
-        private const string SqlSelectNoProj = "SELECT id, first_name, last_name FROM employee WHERE project_id IS NULL";
+        private const string SqlSelectAll = "SELECT employee_id, first_name, last_name, job_title, birth_date, hire_date, department_id FROM employee";
+        private const string SqlSelectSearch = "SELECT * FROM employee WHERE first_name LIKE @first_name OR last_name LIKE @last_name";
+        private const string SqlSelectNoProj = "SELECT employee_id, first_name, last_name FROM employee WHERE project_id IS NULL";
 
         /// <summary>
         /// Returns a list of all of the employees.
@@ -43,7 +43,7 @@ namespace ProjectOrganizer.DAL
                         Employee employee = new Employee();
 
                         // Set the values on the new thing
-                        employee.EmployeeId = Convert.ToInt32(reader["id"]);
+                        employee.EmployeeId = Convert.ToInt32(reader["employee_id"]);
                         employee.FirstName = Convert.ToString(reader["first_name"]);
                         employee.LastName = Convert.ToString(reader["last_name"]);
                         employee.BirthDate = Convert.ToDateTime(reader["birth_date"]);
@@ -93,8 +93,8 @@ namespace ProjectOrganizer.DAL
                     {
                         Employee employee = new Employee();
 
-                        employee.FirstName = Convert.ToString(reader["first_name"]);
-                        employee.LastName = Convert.ToString(reader["last_name"]);
+                        Convert.ToString(employee);
+                        
 
 
                         employees.Add(employee);

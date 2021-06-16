@@ -10,9 +10,9 @@ namespace ProjectOrganizer.DAL
     {
         private readonly string connectionString;
 
-        private const string SqlSelectAll = "SELECT id, name FROM department";
+        private const string SqlSelectAll = "SELECT department_id, name FROM department";
         private const string SqlInsert = "INSERT INTO department (name) VALUES (@name);";
-        private const string SqlUpdate = "UPDATE department SET name = @name WHERE id = @id";
+        private const string SqlUpdate = "UPDATE department SET name = @name WHERE department_id = @id";
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -44,7 +44,7 @@ namespace ProjectOrganizer.DAL
                         Department department = new Department();
 
                         // Set the values on the new thing
-                        department.Id = Convert.ToInt32(reader["id"]);
+                        department.Id = Convert.ToInt32(reader["department_id"]);
                         department.Name = Convert.ToString(reader["name"]);
 
 
