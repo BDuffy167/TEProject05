@@ -39,10 +39,8 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
-
                         Project project = ConvertReaderToProject(reader);
 
-                        
                         projects.Add(project);
                     }
                 }
@@ -70,16 +68,12 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqlInsertEmp, conn);
                     command.Parameters.AddWithValue("@project_id", projectId);
                     command.Parameters.AddWithValue("@employee_id", employeeId);
 
-
-                    // Run our insert command
                     command.ExecuteNonQuery();
 
-                    // If we got here, it must have worked
                     return true;
                 }
             }
@@ -105,16 +99,12 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqlDeleteEmp, conn);
                     command.Parameters.AddWithValue("@project_id", projectId);
                     command.Parameters.AddWithValue("@employee_id", employeeId);
 
-
-                    // Run our insert command
                     command.ExecuteNonQuery();
 
-                    // If we got here, it must have worked
                     return true;
                 }
             }
@@ -131,7 +121,7 @@ namespace ProjectOrganizer.DAL
         /// <param name="newProject">The new project object.</param>
         /// <returns>The new id of the project.</returns>
         public int CreateProject(Project newProject)
-        { 
+        {
 
             try
             {
@@ -139,18 +129,14 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqCreateProj, conn);
-                    
+
                     command.Parameters.AddWithValue("@from_date", newProject.StartDate);
                     command.Parameters.AddWithValue("@to_date", newProject.EndDate);
                     command.Parameters.AddWithValue("@name", newProject.Name);
 
-
-                    // Run our insert command
                     int id = Convert.ToInt32(command.ExecuteScalar());
 
-                    // If we got here, it must have worked
                     return id;
                 }
             }

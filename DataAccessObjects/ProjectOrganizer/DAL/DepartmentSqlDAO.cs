@@ -40,15 +40,11 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
-
                         Department department = new Department();
 
-                        // Set the values on the new thing
                         department.Id = Convert.ToInt32(reader["department_id"]);
                         department.Name = Convert.ToString(reader["name"]);
 
-
-                        // Add it to our list of results
                         departments.Add(department);
                     }
                 }
@@ -74,15 +70,11 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqlInsert, conn);
                     command.Parameters.AddWithValue("@name", newDepartment.Name);
 
-
-                    // Run our insert command
                     int id = Convert.ToInt32(command.ExecuteScalar());
 
-                    // If we got here, it must have worked
                     return id;
                 }
             }
