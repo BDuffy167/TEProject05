@@ -17,7 +17,7 @@ namespace ProjectOrganizer.DAL
 
         private const string SqlSelectAll = "SELECT employee_id, first_name, last_name, job_title, birth_date, hire_date, department_id FROM employee";
         private const string SqlSelectSearch = "SELECT * FROM employee WHERE first_name LIKE @first_name OR last_name LIKE @last_name";
-        private const string SqlSelectNoProj = "SELECT employee_id, first_name, last_name FROM employee WHERE project_id IS NULL";
+        private const string SqlSelectNoProj = "SELECT * FROM employee WHERE employee_id NOT IN(SELECT employee_id FROM project_employee)";
 
         /// <summary>
         /// Returns a list of all of the employees.
@@ -39,20 +39,8 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
+                        Employee employee = ConvertReaderToEmployee(reader);
 
-                        Employee employee = new Employee();
-
-                        // Set the values on the new thing
-                        employee.EmployeeId = Convert.ToInt32(reader["employee_id"]);
-                        employee.FirstName = Convert.ToString(reader["first_name"]);
-                        employee.LastName = Convert.ToString(reader["last_name"]);
-                        employee.BirthDate = Convert.ToDateTime(reader["birth_date"]);
-                        employee.HireDate = Convert.ToDateTime(reader["hire_date"]);
-                        employee.JobTitle = Convert.ToString(reader["job_title"]);
-                        employee.DepartmentId = Convert.ToInt32(reader["department_id"]);
-
-
-                        // Add it to our list of results
                         employees.Add(employee);
                     }
                 }
@@ -91,11 +79,7 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
-                        Employee employee = new Employee();
-
-                        Convert.ToString(employee);
-                        
-
+                        Employee employee = ConvertReaderToEmployee(reader);
 
                         employees.Add(employee);
                     }
@@ -129,11 +113,7 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
-                        Employee employee = new Employee();
-
-                        employee.FirstName = Convert.ToString(reader["first_name"]);
-                        employee.LastName = Convert.ToString(reader["last_name"]);
-
+                        Employee employee = ConvertReaderToEmployee(reader);
 
                         employees.Add(employee);
                     }
@@ -148,5 +128,20 @@ namespace ProjectOrganizer.DAL
             return employees;
         }
 
+
+        private Employee ConvertReaderToEmployee(SqlDataReader reader)
+        {
+            Employee employee = new Employee();
+
+            employee.EmployeeId = Convert.ToInt32(reader["employee_id"]);
+            employee.FirstName = Convert.ToString(reader["first_name"]);
+            employee.LastName = Convert.ToString(reader["last_name"]);
+            employee.BirthDate = Convert.ToDateTime(reader["birth_date"]);
+            employee.HireDate = Convert.ToDateTime(reader["hire_date"]);
+            employee.JobTitle = Convert.ToString(reader["job_title"]);
+            employee.DepartmentId = Convert.ToInt32(reader["department_id"]);
+
+            return employee;
+        }
     }
 }

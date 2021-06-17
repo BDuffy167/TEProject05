@@ -11,8 +11,8 @@ namespace ProjectOrganizer.DAL
         private readonly string connectionString;
 
         private const string SqlSelectAll = "SELECT department_id, name FROM department";
-        private const string SqlInsert = "INSERT INTO department (name) VALUES (@name);";
-        private const string SqlUpdate = "UPDATE department SET name = @name WHERE department_id = @id";
+        private const string SqlInsert = "INSERT INTO department VALUES (@name); SELECT @@IDENTITY";
+        private const string SqlUpdate = "UPDATE department SET name = @name WHERE department_id = @department_id;";
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -40,15 +40,11 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
-
                         Department department = new Department();
 
-                        // Set the values on the new thing
                         department.Id = Convert.ToInt32(reader["department_id"]);
                         department.Name = Convert.ToString(reader["name"]);
 
-
-                        // Add it to our list of results
                         departments.Add(department);
                     }
                 }
@@ -74,17 +70,12 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqlInsert, conn);
-                    command.Parameters.AddWithValue("@id", newDepartment.Id);
                     command.Parameters.AddWithValue("@name", newDepartment.Name);
 
+                    int id = Convert.ToInt32(command.ExecuteScalar());
 
-                    // Run our insert command
-                    command.ExecuteNonQuery();
-
-                    // If we got here, it must have worked
-                    return newDepartment.Id;
+                    return id;
                 }
             }
             catch (SqlException ex)
@@ -107,13 +98,13 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
+                    
                     SqlCommand command = new SqlCommand(SqlUpdate, conn);
-                    command.Parameters.AddWithValue("@id", updatedDepartment.Id);
+                    command.Parameters.AddWithValue("@department_id", updatedDepartment.Id);
                     command.Parameters.AddWithValue("@name", updatedDepartment.Name);
 
 
-                    // Run our insert command
+                    
                     command.ExecuteNonQuery();
 
                     // If we got here, it must have worked

@@ -14,10 +14,10 @@ namespace ProjectOrganizer.DAL
         {
             connectionString = dbConnectionString;
         }
-        private const string SqlSelectAll = "SELECT id, name, from_date, to_date FROM project";
+        private const string SqlSelectAll = "SELECT project_id, name, from_date, to_date FROM project";
         private const string SqlInsertEmp = "INSERT INTO project_employee (project_id, employee_id) VALUES (@project_id, @employee_id)";
         private const string SqlDeleteEmp = "DELETE FROM project_employee WHERE project_id = @project_id AND employee_id = @employee_id";
-        private const string SqCreateProj = "INSERT INTO project (project_id, name, from_date, to_date) VALUES (@project_id, @name, @from_date, @to_date)";
+        private const string SqCreateProj = "INSERT INTO project VALUES (@name, @from_date, @to_date); SELECT @@IDENTITY;";
 
         /// <summary>
         /// Returns all projects.
@@ -39,16 +39,8 @@ namespace ProjectOrganizer.DAL
 
                     while (reader.Read())
                     {
+                        Project project = ConvertReaderToProject(reader);
 
-                        Project project = new Project();
-
-                        // Set the values on the new thing
-                        project.ProjectId = Convert.ToInt32(reader["id"]);
-                        project.Name = Convert.ToString(reader["name"]);
-                        project.StartDate = Convert.ToDateTime(reader["from_date"]);
-                        project.EndDate = Convert.ToDateTime(reader["to_date"]);
-
-                        // Add it to our list of results
                         projects.Add(project);
                     }
                 }
@@ -76,16 +68,12 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqlInsertEmp, conn);
                     command.Parameters.AddWithValue("@project_id", projectId);
                     command.Parameters.AddWithValue("@employee_id", employeeId);
 
-
-                    // Run our insert command
                     command.ExecuteNonQuery();
 
-                    // If we got here, it must have worked
                     return true;
                 }
             }
@@ -111,16 +99,12 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqlDeleteEmp, conn);
                     command.Parameters.AddWithValue("@project_id", projectId);
                     command.Parameters.AddWithValue("@employee_id", employeeId);
 
-
-                    // Run our insert command
                     command.ExecuteNonQuery();
 
-                    // If we got here, it must have worked
                     return true;
                 }
             }
@@ -137,7 +121,7 @@ namespace ProjectOrganizer.DAL
         /// <param name="newProject">The new project object.</param>
         /// <returns>The new id of the project.</returns>
         public int CreateProject(Project newProject)
-        { 
+        {
 
             try
             {
@@ -145,19 +129,15 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
                     SqlCommand command = new SqlCommand(SqCreateProj, conn);
-                    command.Parameters.AddWithValue("@project_id", newProject.ProjectId);
+
                     command.Parameters.AddWithValue("@from_date", newProject.StartDate);
                     command.Parameters.AddWithValue("@to_date", newProject.EndDate);
                     command.Parameters.AddWithValue("@name", newProject.Name);
 
+                    int id = Convert.ToInt32(command.ExecuteScalar());
 
-                    // Run our insert command
-                    command.ExecuteNonQuery();
-
-                    // If we got here, it must have worked
-                    return newProject.ProjectId;
+                    return id;
                 }
             }
             catch (SqlException ex)
@@ -167,5 +147,16 @@ namespace ProjectOrganizer.DAL
             }
         }
 
+        private Project ConvertReaderToProject(SqlDataReader reader)
+        {
+            Project project = new Project();
+
+            project.ProjectId = Convert.ToInt32(reader["project_id"]);
+            project.Name = Convert.ToString(reader["name"]);
+            project.StartDate = Convert.ToDateTime(reader["from_date"]);
+            project.EndDate = Convert.ToDateTime(reader["to_date"]);
+
+            return project;
+        }
     }
 }
