@@ -17,7 +17,7 @@ namespace ProjectOrganizer.DAL
         private const string SqlSelectAll = "SELECT project_id, name, from_date, to_date FROM project";
         private const string SqlInsertEmp = "INSERT INTO project_employee (project_id, employee_id) VALUES (@project_id, @employee_id)";
         private const string SqlDeleteEmp = "DELETE FROM project_employee WHERE project_id = @project_id AND employee_id = @employee_id";
-        private const string SqCreateProj = "INSERT INTO project VALUES (@name, @from_date, @to_date)";
+        private const string SqCreateProj = "INSERT INTO project VALUES (@name, @from_date, @to_date); SELECT @@IDENTITY;";
 
         /// <summary>
         /// Returns all projects.
@@ -148,10 +148,10 @@ namespace ProjectOrganizer.DAL
 
 
                     // Run our insert command
-                    command.ExecuteNonQuery();
+                    int id = Convert.ToInt32(command.ExecuteScalar());
 
                     // If we got here, it must have worked
-                    return newProject.ProjectId;
+                    return id;
                 }
             }
             catch (SqlException ex)

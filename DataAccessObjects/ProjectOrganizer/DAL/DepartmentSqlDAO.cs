@@ -11,8 +11,8 @@ namespace ProjectOrganizer.DAL
         private readonly string connectionString;
 
         private const string SqlSelectAll = "SELECT department_id, name FROM department";
-        private const string SqlInsert = "INSERT INTO department (name) VALUES (@name);";
-        private const string SqlUpdate = "UPDATE department SET name = @name WHERE department_id = @id";
+        private const string SqlInsert = "INSERT INTO department VALUES (@name); SELECT @@IDENTITY";
+        private const string SqlUpdate = "UPDATE department SET name = @name WHERE department_id = @department_id;";
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -76,15 +76,14 @@ namespace ProjectOrganizer.DAL
 
                     // Create our insert command
                     SqlCommand command = new SqlCommand(SqlInsert, conn);
-                    command.Parameters.AddWithValue("@id", newDepartment.Id);
                     command.Parameters.AddWithValue("@name", newDepartment.Name);
 
 
                     // Run our insert command
-                    command.ExecuteNonQuery();
+                    int id = Convert.ToInt32(command.ExecuteScalar());
 
                     // If we got here, it must have worked
-                    return newDepartment.Id;
+                    return id;
                 }
             }
             catch (SqlException ex)
@@ -107,13 +106,13 @@ namespace ProjectOrganizer.DAL
                 {
                     conn.Open();
 
-                    // Create our insert command
+                    
                     SqlCommand command = new SqlCommand(SqlUpdate, conn);
-                    command.Parameters.AddWithValue("@id", updatedDepartment.Id);
+                    command.Parameters.AddWithValue("@department_id", updatedDepartment.Id);
                     command.Parameters.AddWithValue("@name", updatedDepartment.Name);
 
 
-                    // Run our insert command
+                    
                     command.ExecuteNonQuery();
 
                     // If we got here, it must have worked
