@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Capstone.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Capstone.DAL
 {
-   public class IVenueDAO
+   public interface IVenueDAO
     {
+       IEnumerable <Venue> ListVenues();
     }
 }
