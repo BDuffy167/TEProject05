@@ -12,8 +12,9 @@ namespace Capstone.DAL
     public class VenueSqlDAO: IVenueDAO
     {
         private readonly string connectionString;
-        private const string SqlListVenues = "SELECT name FROM venue ORDER BY name ASC";
-
+        private const string SqlListVenues =    "SELECT v.id, v.name, v.city_id, v.description, c.name AS 'city_name', s.abbreviation, s.name AS 'state_name' " +
+                                                "FROM venue v INNER JOIN city c ON v.city_id = c.id INNER JOIN state s ON c.state_abbreviation = s.abbreviation " +
+                                                "ORDER BY v.name";
         public VenueSqlDAO (string connectionString)
         {
             this.connectionString = connectionString;
@@ -38,22 +39,25 @@ namespace Capstone.DAL
             }
             catch (SqlException ex)
             {
-
                 Console.WriteLine("An error occured communicating with the database");
                 Console.WriteLine(ex.Message);
             }
+            return venues;
 
         }
         private Venue ConvertReaderToVenue(SqlDataReader reader)
         {
             Venue venue = new Venue();
+
             venue.VenueId = Convert.ToInt32(reader["id"]);
-            venue.Name = Convert.ToString(reader["name"]);
+            venue.VenueName = Convert.ToString(reader["name"]);
             venue.CityId = Convert.ToInt32(reader["city_id"]);
             venue.Description = Convert.ToString(reader["description"]);
             venue.CityName = Convert.ToString(reader["city_name"]);
-            venue.VenueId = Convert.ToInt32(reader["id"]);
-            venue.VenueId = Convert.ToInt32(reader["id"]);
+            venue.StateAbbreviation = Convert.ToString(reader["abbreviation"]);
+            venue.StateName = Convert.ToString(reader["state_name"]);
+
+            return venue;
         }
     }
 }

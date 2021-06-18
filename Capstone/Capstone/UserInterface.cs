@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Capstone.Models;
 
 namespace Capstone
 {
@@ -23,17 +24,24 @@ namespace Capstone
     {
         private readonly string connectionString;
 
+        private readonly IVenueDAO venueDAO;
+        private readonly IReservationDAO reservationDAO;
+        private readonly ISpaceDAO spaceDAO;
+        private readonly ICategoryDAO categoryDAO;
 
         public UserInterface(string connectionString)
         {
             this.connectionString = connectionString;
+
             this.venueDAO = new VenueSqlDAO(connectionString);
             this.reservationDAO = new ReservationSqlDAO(connectionString);
             this.spaceDAO = new SpaceSqlDAO(connectionString);
             this.categoryDAO = new CategorySqlDAO(connectionString);
         }
 
-        const string Command_ListVenues = "1";
+        const string Cmd_ListVenues = "1";
+
+        const string Cmd_QuitProgram = "q";
         public void Run()
         {
             PrintMainMenu();
@@ -44,7 +52,7 @@ namespace Capstone
 
                 switch (command.ToLower())
                 {
-                    case Command_ListVenues:
+                    case Cmd_ListVenues:
                         ListVenues();
                         break;
 
@@ -62,6 +70,22 @@ namespace Capstone
 
             Console.WriteLine("Q) Quit"); //Fill list as we complete items//
 
+        }
+
+        private void ListVenues()
+        {
+            IEnumerable<Venue> venues = venueDAO.ListVenues();
+            int listNum = 1;
+
+            Console.WriteLine();
+
+            foreach (Venue i in venues)
+            {
+                Console.WriteLine($"{listNum}) {i.VenueName}");
+                listNum++;
+            }
+
+            Console.WriteLine("R) Return to previous screen.");
         }
     }
 }

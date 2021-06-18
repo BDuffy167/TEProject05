@@ -7,7 +7,7 @@ namespace Capstone.Models
    public class Venue
     {
         public int VenueId { get; set; }
-        public string Name { get; set; }
+        public string VenueName { get; set; }
         public int CityId { get; set; } //Might need to remove//
         public string Description { get; set; }
         public string CityName { get; set; }
