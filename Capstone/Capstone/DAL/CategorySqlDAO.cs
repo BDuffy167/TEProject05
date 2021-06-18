@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Capstone.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,11 @@ namespace Capstone.DAL
         public CategorySqlDAO(string connectionString)
         {
             this.connectionString = connectionString;
+        }
+
+        public IList<Category> GetVenueCategories(Venue venue)
+        {
+
         }
     }
 }

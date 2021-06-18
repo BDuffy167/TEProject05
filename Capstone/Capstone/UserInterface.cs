@@ -101,7 +101,7 @@ namespace Capstone
                 {
                     Console.WriteLine(venues[i].VenueName);
                     Console.WriteLine($"Location: {venues[i].CityName}, {venues[i].StateAbbreviation}");
-                    //Console.WriteLine ???
+                    Console.WriteLine(categoryDAO.GetVenueCategories(venues[i]));
                     Console.WriteLine();
                     Console.WriteLine(venues[i].Description);
                     Console.WriteLine();
