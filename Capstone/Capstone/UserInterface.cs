@@ -74,10 +74,11 @@ namespace Capstone
 
         private void ListVenues()
         {
-            IEnumerable<Venue> venues = venueDAO.ListVenues();
+            IList<Venue> venues = venueDAO.ListVenues();
             int listNum = 1;
 
             Console.WriteLine();
+            Console.WriteLine("Which venue would you like to view?");
 
             foreach (Venue i in venues)
             {
@@ -86,6 +87,27 @@ namespace Capstone
             }
 
             Console.WriteLine("R) Return to previous screen.");
+
+            GetUserVenueChoice(venues);
+        }
+
+        private void GetUserVenueChoice(IList<Venue> venues)
+        {
+            int userInput = int.Parse(Console.ReadLine()) - 1;
+
+            for (int i = 0; i < venues.Count; i++)
+            {
+                if (userInput == i)
+                {
+                    Console.WriteLine(venues[i].VenueName);
+                    Console.WriteLine($"Location: {venues[i].CityName}, {venues[i].StateAbbreviation}");
+                    //Console.WriteLine ???
+                    Console.WriteLine();
+                    Console.WriteLine(venues[i].Description);
+                    Console.WriteLine();
+                    Console.WriteLine("What would you like to do next?");
+                }
+            }
         }
     }
 }

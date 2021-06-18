@@ -19,7 +19,7 @@ namespace Capstone.DAL
         {
             this.connectionString = connectionString;
         }
-        public IEnumerable<Venue> ListVenues()
+        public IList<Venue> ListVenues()
         {
             List<Venue> venues = new List<Venue>();
             try
@@ -34,6 +34,7 @@ namespace Capstone.DAL
                     while (reader.Read())
                     {
                         Venue venue = ConvertReaderToVenue(reader);
+                        venues.Add(venue);
                     }
                 }
             }

@@ -7,6 +7,6 @@ namespace Capstone.DAL
 {
    public interface IVenueDAO
     {
-       IEnumerable <Venue> ListVenues();
+        IList<Venue> ListVenues();
     }
 }
