@@ -4,14 +4,11 @@ using System.Text;
 
 namespace Capstone.DAL
 {
-    /// <summary>
-    /// This class handles working with Venues in the database.
-    /// </summary>
-    public class VenueDAO
+   public class CategorySqlDAO: ICategoryDAO
     {
         private readonly string connectionString;
 
-        public VenueDAO (string connectionString)
+        public CategorySqlDAO(string connectionString)
         {
             this.connectionString = connectionString;
         }

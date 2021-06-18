@@ -23,18 +23,32 @@ namespace Capstone
     {
         private readonly string connectionString;
 
-        private readonly VenueDAO venueDAO;
+        private readonly IReservationDAO reservationDAO;
+        private readonly IVenueDAO venueDAO;
 
         public UserInterface(string connectionString)
         {
             this.connectionString = connectionString;
-            venueDAO = new VenueDAO(connectionString);
+            venueDAO = new VenueSqlDAO(connectionString);
         }
 
         public void Run()
         {
-            Console.WriteLine("Reached the User Interface.");
-            Console.ReadLine();
+            PrintMainMenu();
+            while (true)
+            {
+                string command = Console.ReadLine();
+
+            }
+        }
+        private void PrintMainMenu()
+        {
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine();
+            Console.WriteLine("1) List Venues");
+
+            Console.WriteLine("Q) Quit"); //Fill list as we complete items//
+
         }
     }
 }
