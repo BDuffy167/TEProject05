@@ -103,7 +103,7 @@ namespace Capstone
                     {
                         IList<Venue> venue = venueDAO.GetDetailedVenueInfo(i[3..]);
                         ShowDetailedVenueInfo(venue);
-                        break;
+                        return;
                     }
                 }
                 if (userInput.ToLower() == "r")
@@ -142,7 +142,33 @@ namespace Capstone
             return userInput;
         }
         // Displays detailed venue info to the user
-        public void ShowDetailedVenueInfo(IList<Venue> venue)
+        public void ShowDetailedVenueInfo(IList<Venue> venue) //I only add this arg to pass to the next method. Probably bad idea?
+        {
+            bool keepGoing = true;
+
+            while (keepGoing)
+            {
+                string userInput = InputDetailedVenueChoice(venue);
+
+                switch (userInput.ToLower())
+                {
+                    case "1":
+                        ShowSpaceMenu(venue[0].VenueName);
+                        break;
+                    case "2":
+                        MakeReservation();
+                        break;
+                    case "r":
+                        keepGoing = false;
+                        break;
+                    default:
+                        Console.WriteLine("Command provided was not a valid please try again");
+                        break;
+                }
+            }
+        }
+        // User selects to see venue spaces or tries to make a reservation
+        public string InputDetailedVenueChoice(IList<Venue> venue)
         {
             Console.WriteLine(venue[0].VenueName);
             Console.WriteLine($"Location: {venue[0].CityName}, {venue[0].StateAbbreviation}");
@@ -156,35 +182,6 @@ namespace Capstone
             Console.WriteLine();
             Console.WriteLine(venue[0].Description);
             Console.WriteLine();
-
-            bool keepGoing = true;
-
-            while (keepGoing)
-            {
-                string userInput = InputDetailedVenueChoice();
-
-                switch (userInput.ToLower())
-                {
-                    case "1":
-                        ShowSpaceMenu(venue[0].VenueName);
-                        break;
-                    case "2":
-                        MakeReservation();
-                        break;
-                    case "r":
-                        keepGoing = false;
-                        return;
-                    default:
-                        Console.WriteLine("Command provided was not a valid please try again");
-                        break;
-                }
-            }
-        }
-        // User selects to see venue spaces or tries to make a reservation
-        public string InputDetailedVenueChoice()
-        {
-
-
 
             Console.WriteLine("What would you like to do next?");
             Console.WriteLine("\t1) View Spaces");
