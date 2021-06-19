@@ -189,12 +189,20 @@ namespace Capstone
             }
         }
         // User may search for reservations
-        public int InputSpaceMenuChoice(List<Space> spaces, Venue venue)
+        public int InputSpaceMenuChoice(List<Space> spaces)
         {
-            Console.WriteLine($"{venue.VenueName} Spaces");
+            Console.WriteLine($"{spaces[0].VenueName} Spaces");
             Console.WriteLine();
             string header = string.Format($"{"",-6}{"Name",-15}{"Open",-8}{"Close",-8}{"Daily Rate",-14}{"Max. Occupancy",-14}");
             Console.WriteLine(header);
+
+            int indexNum = 1;
+
+            foreach (Space space in spaces)
+            {
+                string spaceItem = string.Format($"{0,-6}{1,-15}{2,-8}{3,-8}{4,-14}{5,-14}", "#" + indexNum, space.SpaceName, space.OpenFrom, space.OpenTo, space.DailyRate, space.MaxOccupancy);
+                Console.WriteLine(spaceItem);
+            }
 
         }
         // Walks a user through searching for a reservation
