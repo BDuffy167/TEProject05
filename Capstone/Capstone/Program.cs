@@ -22,7 +22,7 @@ namespace Capstone
             string connectionString = configuration.GetConnectionString("Project");
 
             UserInterface ui = new UserInterface(connectionString);
-            ui.Run();
+            //ui.Run();
 
         }
     }
