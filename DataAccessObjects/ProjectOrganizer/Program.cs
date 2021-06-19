@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ProjectOrganizer.DAL;
+using System;
 using System.IO;
 
 namespace ProjectOrganizer
@@ -22,7 +23,11 @@ namespace ProjectOrganizer
             IDepartmentDAO departmentDAO = new DepartmentSqlDAO(connectionString);
 
             ProjectCLI projectCLI = new ProjectCLI(employeeDAO, projectDAO, departmentDAO);
-            projectCLI.RunCLI();
+
+            string header = string.Format($"{"",-6}{"Name",-20}{"Open",-8}{"Close",-8}{"Daily Rate",-14}{"Max. Occupancy",-14}");
+            Console.WriteLine(header);
+
+            //projectCLI.RunCLI();
         }
     }
 }

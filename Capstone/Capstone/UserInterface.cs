@@ -179,19 +179,22 @@ namespace Capstone
         // Lists detailed info for all spaces in a venue
         public void ShowSpaceMenu(string name)
         {
-            Venue venue = spaceDAO.GetSpaceInfo(name);
+            List<Space> spaces = spaceDAO.GetSpaceInfo(name);
 
             bool keepGoing = true;
 
             while (keepGoing)
             {
-                string userInput = InputSpaceMenuChoice(venue);
+                string userInput = InputSpaceMenuChoice(spaces);
             }
         }
         // User may search for reservations
-        public int InputSpaceMenuChoice(Venue venue)
+        public int InputSpaceMenuChoice(List<Space> spaces, Venue venue)
         {
-            Console.WriteLine($"{venue.VenueName} Spaces.");
+            Console.WriteLine($"{venue.VenueName} Spaces");
+            Console.WriteLine();
+            string header = string.Format($"{"",-6}{"Name",-15}{"Open",-8}{"Close",-8}{"Daily Rate",-14}{"Max. Occupancy",-14}");
+            Console.WriteLine(header);
 
         }
         // Walks a user through searching for a reservation
