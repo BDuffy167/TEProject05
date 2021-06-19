@@ -9,6 +9,7 @@ namespace Capstone.Models
         public int SpaceId { get; set; }
         public int VenueID { get; set; }
         public string SpaceName { get; set; }
+        public string VenueName { get; set; }
         public bool IsAccessible { get; set; }
         public DateTime? OpenFrom { get; set; }
         public DateTime? OpenTo { get; set; }
