@@ -179,7 +179,7 @@ namespace Capstone
         // Lists detailed info for all spaces in a venue
         public void ShowSpaceMenu(string name)
         {
-
+            Venue venue = GetSpaceInfo(name)
         }
         // User may search for reservations
         public int InputSpaceMenuChoice()
