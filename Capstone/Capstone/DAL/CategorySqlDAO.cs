@@ -14,9 +14,9 @@ namespace Capstone.DAL
             this.connectionString = connectionString;
         }
 
-        public IList<Category> GetVenueCategories(Venue venue)
-        {
+        //public IList<Category> GetVenueCategories(Venue venue)
+        //{
 
-        }
+        //}
     }
 }

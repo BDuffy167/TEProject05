@@ -10,8 +10,8 @@ namespace Capstone.Models
         public int VenueID { get; set; }
         public string SpaceName { get; set; }
         public bool IsAccessible { get; set; }
-        public DateTime OpenFrom { get; set; }
-        public DateTime OpenTo { get; set; }
+        public DateTime? OpenFrom { get; set; }
+        public DateTime? OpenTo { get; set; }
         public decimal DailyRate { get; set; }
         public int MaxOccupancy { get; set; }
     }

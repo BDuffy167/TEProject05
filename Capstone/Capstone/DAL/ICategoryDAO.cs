@@ -7,6 +7,6 @@ namespace Capstone.DAL
 {
     public interface ICategoryDAO
     {
-        public IList<Category> GetVenueCategories(Venue venue)
+       // public IList<Category> GetVenueCategories(Venue venue);
     }
 }

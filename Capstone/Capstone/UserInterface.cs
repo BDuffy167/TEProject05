@@ -65,11 +65,8 @@ namespace Capstone
         private void PrintMainMenu()
         {
             Console.WriteLine("What would you like to do?");
-            Console.WriteLine();
-            Console.WriteLine("1) List Venues");
-
-            Console.WriteLine("Q) Quit"); //Fill list as we complete items//
-
+            Console.WriteLine("\t1) List Venues");
+            Console.WriteLine("\tQ) Quit"); //Fill list as we complete items//
         }
 
         private void ListVenues()
@@ -82,11 +79,11 @@ namespace Capstone
 
             foreach (Venue i in venues)
             {
-                Console.WriteLine($"{listNum}) {i.VenueName}");
+                Console.WriteLine($"\t{listNum}) {i.VenueName}");
                 listNum++;
             }
 
-            Console.WriteLine("R) Return to previous screen.");
+            Console.WriteLine("\tR) Return to previous screen.");
 
             GetUserVenueChoice(venues);
         }
@@ -101,11 +98,24 @@ namespace Capstone
                 {
                     Console.WriteLine(venues[i].VenueName);
                     Console.WriteLine($"Location: {venues[i].CityName}, {venues[i].StateAbbreviation}");
-                    Console.WriteLine(categoryDAO.GetVenueCategories(venues[i]));
+                    Console.Write("Category: ");
+                    string categoryString = "";
+                    foreach (string s in venues[i].CategoryName)
+                    {
+                        categoryString += ($"{s}, ");
+                    }
+                    Console.WriteLine(categoryString.Substring(0, categoryString.Length - 2));
                     Console.WriteLine();
                     Console.WriteLine(venues[i].Description);
                     Console.WriteLine();
                     Console.WriteLine("What would you like to do next?");
+                    Console.WriteLine("\t1) View Spaces");
+                    Console.WriteLine("\t2) Search for Reservation");
+                    Console.WriteLine("\tR) Return to previous screen");
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a valid selection or (R)eturn");
                 }
             }
         }

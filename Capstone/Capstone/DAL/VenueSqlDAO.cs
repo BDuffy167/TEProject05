@@ -9,19 +9,20 @@ namespace Capstone.DAL
     /// <summary>
     /// This class handles working with Venues in the database.
     /// </summary>
-    public class VenueSqlDAO: IVenueDAO
+    public class VenueSqlDAO : IVenueDAO
     {
         private readonly string connectionString;
-        private const string SqlListVenues =    "SELECT v.id, v.name, v.city_id, v.description, c.name AS 'city_name', s.abbreviation, s.name AS 'state_name' " +
-                                                "FROM venue v INNER JOIN city c ON v.city_id = c.id INNER JOIN state s ON c.state_abbreviation = s.abbreviation " +
-                                                "ORDER BY v.name";
-        public VenueSqlDAO (string connectionString)
+        private const string SqlListVenues = "SELECT v.id, v.name, v.city_id, v.description, c.name AS 'city_name', s.abbreviation, s.name AS 'state_name', cat.id AS 'category_id', cat.name AS 'category_name'" +
+                                                "FROM venue v INNER JOIN city c ON v.city_id = c.id  INNER JOIN state s ON c.state_abbreviation = s.abbreviation INNER JOIN category_venue catv ON c.id = catv.venue_id INNER JOIN category cat ON catv.category_id = cat.id " +
+                                                "ORDER BY v.name, cat.name";
+        public VenueSqlDAO(string connectionString)
         {
             this.connectionString = connectionString;
         }
         public IList<Venue> ListVenues()
         {
-            List<Venue> venues = new List<Venue>();
+            IList<Venue> venues = new List<Venue>();
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -33,7 +34,10 @@ namespace Capstone.DAL
 
                     while (reader.Read())
                     {
-                        Venue venue = ConvertReaderToVenue(reader);
+                        Venue venue = ConvertReaderToVenue(reader, venues);
+
+                        
+
                         venues.Add(venue);
                     }
                 }
@@ -46,7 +50,7 @@ namespace Capstone.DAL
             return venues;
 
         }
-        private Venue ConvertReaderToVenue(SqlDataReader reader)
+        private Venue ConvertReaderToVenue(SqlDataReader reader, IList<Venue> venues)
         {
             Venue venue = new Venue();
 
@@ -57,6 +61,12 @@ namespace Capstone.DAL
             venue.CityName = Convert.ToString(reader["city_name"]);
             venue.StateAbbreviation = Convert.ToString(reader["abbreviation"]);
             venue.StateName = Convert.ToString(reader["state_name"]);
+
+
+            venue.CategoryId.Add(Convert.ToInt32(reader["category_id"]));
+            venue.CategoryName.Add(Convert.ToString(reader["category_name"]));
+
+            Venue oldVenue = venue;
 
             return venue;
         }
