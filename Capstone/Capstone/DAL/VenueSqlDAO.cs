@@ -36,7 +36,10 @@ namespace Capstone.DAL
                     {
                         Venue venue = ConvertReaderToVenue(reader, venues);
 
-                        
+                        if (!DBNull.Value.Equals(reader["category_name"]))
+                        {
+                            //venue.AddCatagoryToList(Convert.ToString(reader["category_name"]));
+                        }
 
                         venues.Add(venue);
                     }
@@ -53,7 +56,7 @@ namespace Capstone.DAL
         private Venue ConvertReaderToVenue(SqlDataReader reader, IList<Venue> venues)
         {
             Venue venue = new Venue();
-
+            
             venue.VenueId = Convert.ToInt32(reader["id"]);
             venue.VenueName = Convert.ToString(reader["name"]);
             venue.CityId = Convert.ToInt32(reader["city_id"]);
@@ -66,9 +69,13 @@ namespace Capstone.DAL
             venue.CategoryId.Add(Convert.ToInt32(reader["category_id"]));
             venue.CategoryName.Add(Convert.ToString(reader["category_name"]));
 
-            Venue oldVenue = venue;
-
             return venue;
         }
+
+
+
+
+
+
     }
 }
