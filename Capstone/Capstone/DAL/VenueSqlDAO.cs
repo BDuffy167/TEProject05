@@ -12,14 +12,16 @@ namespace Capstone.DAL
     public class VenueSqlDAO : IVenueDAO
     {
         private readonly string connectionString;
-        private const string SqlListVenues = "SELECT v.id, v.name, v.city_id, v.description, c.name AS 'city_name', s.abbreviation, s.name AS 'state_name', cat.id AS 'category_id', cat.name AS 'category_name'" +
+        private const string SqlVenueNames = "SELECT v.id, v.name, v.city_id, v.description, c.name AS 'city_name', s.abbreviation, s.name AS 'state_name', cat.id AS 'category_id', cat.name AS 'category_name'" +
                                                 "FROM venue v INNER JOIN city c ON v.city_id = c.id  INNER JOIN state s ON c.state_abbreviation = s.abbreviation INNER JOIN category_venue catv ON c.id = catv.venue_id INNER JOIN category cat ON catv.category_id = cat.id " +
                                                 "ORDER BY v.name, cat.name";
+        private const string SqlDetailedVenue = "";
+
         public VenueSqlDAO(string connectionString)
         {
             this.connectionString = connectionString;
         }
-        public IList<Venue> ListVenues()
+        public IList<Venue> GetVenueNames()
         {
             IList<Venue> venues = new List<Venue>();
 
@@ -29,17 +31,14 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(SqlListVenues, conn);
+                    SqlCommand cmd = new SqlCommand(SqlVenueNames, conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        Venue venue = ConvertReaderToVenue(reader, venues);
+                        Venue venue = new Venue();
 
-                        if (!DBNull.Value.Equals(reader["category_name"]))
-                        {
-                            //venue.AddCatagoryToList(Convert.ToString(reader["category_name"]));
-                        }
+                        venue.VenueName = Convert.ToString(reader["name"]);
 
                         venues.Add(venue);
                     }
@@ -51,7 +50,6 @@ namespace Capstone.DAL
                 Console.WriteLine(ex.Message);
             }
             return venues;
-
         }
         private Venue ConvertReaderToVenue(SqlDataReader reader, IList<Venue> venues)
         {

@@ -36,30 +36,38 @@ namespace Capstone
             this.reservationDAO = new ReservationSqlDAO(connectionString);
             this.spaceDAO = new SpaceSqlDAO(connectionString);
         }
-
-        const string Cmd_ListVenues = "1";
-
-        const string Cmd_QuitProgram = "q";
+        
         public void Run()
         {
-            bool keepGoing = true;
-
-            while (keepGoing)
-            { 
-                PrintMainMenu();
-                InputMainMenuChoice();
-            }
-
+            ShowMainMenu();
+            
         }
 
         // This displays the starting menu
-        private void PrintMainMenu()
+        private void ShowMainMenu()
         {
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine("\t1) List Venues");
-            Console.WriteLine("\tQ) Quit"); //Fill list as we complete items//
-        }
 
+            bool keepGoing = true;
+
+            while (keepGoing)
+            {
+                string userInput = InputMainMenuChoice();
+
+                switch (userInput.ToLower())
+                {
+                    case "1":
+                        ShowVenueNames();
+                        break;
+                    case "q":
+                        keepGoing = false;
+                        break;
+                    default:
+                        Console.WriteLine("Command provided was not a valid please try again");
+                        break;
+                }
+            }
+        }
+        // DELETE LATER
         private void GetUserVenueChoice(IList<Venue> venues)
         {
             int userInput = int.Parse(Console.ReadLine()) - 1;
@@ -93,32 +101,20 @@ namespace Capstone
         }
 
         // User selects and option from the main menu
-        private void InputMainMenuChoice()
+        private string InputMainMenuChoice()
         {
-            bool keepGoing = true;
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\t1) List Venues");
+            Console.WriteLine("\tQ) Quit");
 
-            while (keepGoing)
-            {
-                string cmd = Console.ReadLine();
+            string userInput = Console.ReadLine();
 
-                switch (cmd.ToLower())
-                {
-                    case "1":
-                        PrintVenueNames();
-                        break;
-                    case "q":
-                        keepGoing = false;
-                        break;
-                    default:
-                        Console.WriteLine("Command provided was not a valid please try again");
-                        break;
-                }
-            }
+            return userInput;
         }
         // Displays full list of venue names
-        public void PrintVenueNames()
+        public void ShowVenueNames()
         {
-            IList<Venue> venues = venueDAO.ListVenues();
+            IList<Venue> venues = venueDAO.GetVenueNames();
             int listNum = 1;
             List<string> venueList = new List<string>();
 
@@ -135,7 +131,7 @@ namespace Capstone
             Console.WriteLine("\tR) Return to previous screen.");
 
             InputVenueMenuChoice(venueList);
-           
+
         }
         // User selects which venue they would like to know more about
         private void InputVenueMenuChoice(List<string> venueList)
@@ -162,6 +158,7 @@ namespace Capstone
                 else
                 {
                     Console.WriteLine("Please input a valid choice.");
+                    break;
                 }
             }
         }
