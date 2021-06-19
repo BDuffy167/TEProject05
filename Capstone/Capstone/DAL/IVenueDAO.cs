@@ -7,6 +7,8 @@ namespace Capstone.DAL
 {
    public interface IVenueDAO
     {
-        IList<Venue> ListVenues();
+        IList<Venue> GetVenueNames();
+
+        //IList<Venue> GetDetailedVenueInfo(string s);
     }
 }
