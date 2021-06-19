@@ -112,7 +112,7 @@ namespace Capstone
                 {
                     if (userInput == i.Substring(0, 0))
                     {
-                        List<Venue> venue = venueDAO.GetDetailedVenueInfo(i.Substring(3));
+                        IList<Venue> venue = venueDAO.GetDetailedVenueInfo(i.Substring(3));
                         ShowDetailedVenueInfo(venue);
                     }
                 }
@@ -179,12 +179,20 @@ namespace Capstone
         // Lists detailed info for all spaces in a venue
         public void ShowSpaceMenu(string name)
         {
-            Venue venue = GetSpaceInfo(name)
+            Venue venue = spaceDAO.GetSpaceInfo(name);
+
+            bool keepGoing = true;
+
+            while (keepGoing)
+            {
+                string userInput = InputSpaceMenuChoice(venue);
+            }
         }
         // User may search for reservations
-        public int InputSpaceMenuChoice()
+        public int InputSpaceMenuChoice(Venue venue)
         {
-            return 1;
+            Console.WriteLine($"{venue.VenueName} Spaces.");
+
         }
         // Walks a user through searching for a reservation
         public void MakeReservation()

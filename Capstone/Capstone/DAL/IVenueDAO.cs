@@ -9,6 +9,6 @@ namespace Capstone.DAL
     {
         IList<Venue> GetVenueNames();
 
-        //IList<Venue> GetDetailedVenueInfo(string s);
+        IList<Venue> GetDetailedVenueInfo(string s);
     }
 }
