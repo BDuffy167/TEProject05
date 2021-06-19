@@ -7,6 +7,6 @@ namespace Capstone.DAL
 {
    public interface ISpaceDAO
     {
-        IList<Space> GetSpaceInfo(string name);
+        List<Space> GetSpaceInfo(string name);
     }
 }

@@ -16,9 +16,9 @@ namespace Capstone.DAL
             this.connectionString = connectionString;
         }
 
-        public IList<Space> GetSpaceInfo(string name)
+        public List<Space> GetSpaceInfo(string name)
         {
-            IList<Space> spaces = new List<Space>();
+            List<Space> spaces = new List<Space>();
 
             try
             {
@@ -27,7 +27,7 @@ namespace Capstone.DAL
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT id, venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy FROM space WHERE spaces = @spaces;", conn);
-                    cmd.Parameters.AddWithValue("@spaces", spaces);
+                    cmd.Parameters.AddWithValue("@spaces", name);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -35,7 +35,7 @@ namespace Capstone.DAL
                     {
                         Space space = new Space();
 
-                        space.SpaceName = Convert.ToString(reader["name"]);
+                        space = ConvertReaderToSpace(reader);
 
                         spaces.Add(space);
                     }
@@ -49,39 +49,39 @@ namespace Capstone.DAL
             return spaces;
         }
 
-            public IList<Space> InputSpaceMenuChoice(Venue venue)
-            {
-                List<Space> spaces = new List<Space>();
+            //public IList<Space> InputSpaceMenuChoice(Venue venue)
+            //{
+            //    List<Space> spaces = new List<Space>();
 
-                try
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
+            //    try
+            //    {
+            //        using (SqlConnection conn = new SqlConnection(connectionString))
+            //        {
+            //            conn.Open();
 
-                        SqlCommand cmd = new SqlCommand("SELECT id, name, open_from, open_to, daily_rate, max_occupancy FROM space", conn);
-                        SqlDataReader reader = cmd.ExecuteReader();
+            //            SqlCommand cmd = new SqlCommand("SELECT id, name, open_from, open_to, daily_rate, max_occupancy FROM space", conn);
+            //            SqlDataReader reader = cmd.ExecuteReader();
 
-                        while (reader.Read())
-                        {
-                            Space space = new Space();
+            //            while (reader.Read())
+            //            {
+            //                Space space = new Space();
 
-                            space.VenueName = Convert.ToString(reader["name"]);
-                            spaces.Add(space);
-                        }
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    Console.WriteLine("Error retrieving venues.");
-                    Console.WriteLine(ex.Message);
+            //                space.VenueName = Convert.ToString(reader["name"]);
+            //                spaces.Add(space);
+            //            }
+            //        }
+            //    }
+            //    catch (SqlException ex)
+            //    {
+            //        Console.WriteLine("Error retrieving venues.");
+            //        Console.WriteLine(ex.Message);
 
-                    throw;
-                }
+            //        throw;
+            //    }
 
-                return spaces;
-            }
-        private Space ConvertReaderToSpace(SqlDataReader reader, IList<Space> spaces)
+            //    return spaces;
+            //}
+        private Space ConvertReaderToSpace(SqlDataReader reader)
         {
             Space space = new Space();
 
@@ -98,8 +98,6 @@ namespace Capstone.DAL
             space.VenueID = Convert.ToInt32(reader["venue_id"]);
             space.VenueName = Convert.ToString(reader["name"]);
             space.IsAccessible = Convert.ToBoolean(reader["is_accessible"]);
-            space.OpenFrom = Convert.ToDateTime(reader["open_from"]);
-            space.OpenTo = Convert.ToDateTime(reader["open_to"]);
             space.DailyRate = Convert.ToDecimal(reader["daily_rate"]);
             space.MaxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
 

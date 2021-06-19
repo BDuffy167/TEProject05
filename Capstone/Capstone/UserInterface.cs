@@ -110,9 +110,9 @@ namespace Capstone
 
                 foreach (string i in venueList)
                 {
-                    if (userInput == i.Substring(0, 0))
+                    if (userInput.ToLower() == i.Substring(0, 1))
                     {
-                        IList<Venue> venue = venueDAO.GetDetailedVenueInfo(i.Substring(3));
+                        IList<Venue> venue = venueDAO.GetDetailedVenueInfo(i[3..]);
                         ShowDetailedVenueInfo(venue);
                     }
                 }
@@ -174,7 +174,10 @@ namespace Capstone
             Console.WriteLine("\t1) View Spaces");
             Console.WriteLine("\t2) Search for Reservation");
             Console.WriteLine("\tR) Return to previous screen");
-            return "";
+
+            string userInput = Console.ReadLine();
+
+            return userInput;
         }
         // Lists detailed info for all spaces in a venue
         public void ShowSpaceMenu(string name)
@@ -189,7 +192,7 @@ namespace Capstone
             }
         }
         // User may search for reservations
-        public int InputSpaceMenuChoice(List<Space> spaces)
+        public string InputSpaceMenuChoice(List<Space> spaces)
         {
             Console.WriteLine($"{spaces[0].VenueName} Spaces");
             Console.WriteLine();
@@ -203,6 +206,9 @@ namespace Capstone
                 string spaceItem = string.Format($"{0,-6}{1,-15}{2,-8}{3,-8}{4,-14}{5,-14}", "#" + indexNum, space.SpaceName, space.OpenFrom, space.OpenTo, space.DailyRate, space.MaxOccupancy);
                 Console.WriteLine(spaceItem);
             }
+
+            string userInput = Console.ReadLine();
+            return userInput;
 
         }
         // Walks a user through searching for a reservation
