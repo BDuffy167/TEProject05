@@ -95,8 +95,6 @@ namespace Capstone.DAL
             venue.CityName = Convert.ToString(reader["city_name"]);
             venue.StateAbbreviation = Convert.ToString(reader["abbreviation"]);
             venue.StateName = Convert.ToString(reader["state_name"]);
-
-
             venue.CategoryId = Convert.ToInt32(reader["category_id"]);
             venue.CategoryName = Convert.ToString(reader["category_name"]);
 

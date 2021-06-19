@@ -54,7 +54,7 @@ namespace Capstone
                 switch (userInput.ToLower())
                 {
                     case "1":
-                        ShowVenueNames();
+                        ShowVenueMenuNames();
                         break;
                     case "q":
                         keepGoing = false;
@@ -78,35 +78,24 @@ namespace Capstone
             return userInput;
         }
         // Displays full list of venue names
-        public void ShowVenueNames()
+        public void ShowVenueMenuNames()
         {
+            bool keepGoing = true;
+
             IList<Venue> venues = venueDAO.GetVenueNames();
             int listNum = 1;
             List<string> venueList = new List<string>();
 
-            Console.WriteLine();
-            Console.WriteLine("Which venue would you like to view?");
-
             foreach (Venue i in venues)
             {
                 venueList.Add($"{listNum}) {i.VenueName}");
-                Console.WriteLine($"\t{listNum}) {i.VenueName}");
                 listNum++;
             }
 
-            Console.WriteLine("\tR) Return to previous screen.");
-
-            InputVenueMenuChoice(venueList);
-
-        }
-        // User selects which venue they would like to know more about
-        private void InputVenueMenuChoice(List<string> venueList)
-        {
-            bool keepGoing = true;
-
             while (keepGoing)
             {
-                string userInput = Console.ReadLine();
+                string userInput = InputVenueMenuChoice();
+
 
                 foreach (string i in venueList)
                 {
@@ -114,12 +103,13 @@ namespace Capstone
                     {
                         IList<Venue> venue = venueDAO.GetDetailedVenueInfo(i[3..]);
                         ShowDetailedVenueInfo(venue);
+                        break;
                     }
                 }
                 if (userInput.ToLower() == "r")
                 {
                     keepGoing = false;
-                    break;
+                    return;
                 }
                 else
                 {
@@ -127,6 +117,29 @@ namespace Capstone
                     break;
                 }
             }
+
+        }
+
+        // User selects which venue they would like to know more about
+        private string InputVenueMenuChoice()
+        {
+            IList<Venue> venues = venueDAO.GetVenueNames();
+            int listNum = 1;
+
+
+            Console.WriteLine();
+            Console.WriteLine("Which venue would you like to view?");
+
+            foreach (Venue i in venues)
+            {
+                Console.WriteLine($"\t{listNum}) {i.VenueName}");
+                listNum++;
+            }
+
+            Console.WriteLine("\tR) Return to previous screen.");
+
+            string userInput = Console.ReadLine();
+            return userInput;
         }
         // Displays detailed venue info to the user
         public void ShowDetailedVenueInfo(IList<Venue> venue)
@@ -160,7 +173,7 @@ namespace Capstone
                         break;
                     case "r":
                         keepGoing = false;
-                        break;
+                        return;
                     default:
                         Console.WriteLine("Command provided was not a valid please try again");
                         break;
@@ -170,6 +183,9 @@ namespace Capstone
         // User selects to see venue spaces or tries to make a reservation
         public string InputDetailedVenueChoice()
         {
+
+
+
             Console.WriteLine("What would you like to do next?");
             Console.WriteLine("\t1) View Spaces");
             Console.WriteLine("\t2) Search for Reservation");
