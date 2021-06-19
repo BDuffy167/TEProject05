@@ -18,7 +18,7 @@ namespace Capstone.IntegrationTests
             int expectedResults = this.GetRowCount("venue");
 
             // Act
-            IList<Venue> results = dao.ListVenues();
+            IList<Venue> results = dao.GetVenueNames();
 
             // Assert
             Assert.IsTrue(results.Count > 0);
