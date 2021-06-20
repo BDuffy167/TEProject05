@@ -147,10 +147,10 @@ namespace Capstone
                 {
                     case "1":
                         ShowSpaceMenu(venue[0].VenueName);
-                        break;
+                        continue;
                     case "2":
                         MakeReservation();
-                        break;
+                        continue;
                     case "r":
                         return;
                     default:
@@ -195,6 +195,19 @@ namespace Capstone
             while (keepGoing)
             {
                 string userInput = InputSpaceMenuChoice(spaces);
+
+                switch (userInput.ToLower())
+                {
+                    case "1":
+                        MakeReservation(spaces[0].VenueName);
+                        continue;
+                    case "r":
+                        return;
+                    default:
+                        Console.WriteLine("Command provided was not a valid please try again");
+                        Console.WriteLine();
+                        continue;
+                }
             }
         }
         // User may search for reservations
@@ -213,6 +226,10 @@ namespace Capstone
                 Console.WriteLine(spaceItem);
                 indexNum++;
             }
+            Console.WriteLine();
+            Console.WriteLine("What would you like to do next?");
+            Console.WriteLine("\t1) Search for Reservation");
+            Console.WriteLine("\tR) Return to previous screen");
 
             string userInput = Console.ReadLine();
             return userInput;
@@ -223,6 +240,12 @@ namespace Capstone
         {
             
         }
+        public void MakeReservation(string venueName)
+        {
+
+        }
+
+
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()
         {

@@ -13,7 +13,9 @@ namespace Capstone.Models
         public bool IsAccessible { get; set; }
         public int? OpenFrom { get; set; }
         public int? OpenTo { get; set; }
-        public double DailyRate { get; set; }
+        public double DailyRate { get; set; } = 0.00d;
         public int MaxOccupancy { get; set; }
+
+       
     }
 }
