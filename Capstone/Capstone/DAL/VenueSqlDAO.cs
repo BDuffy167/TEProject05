@@ -15,7 +15,7 @@ namespace Capstone.DAL
         private const string SqlVenueNames = "SELECT name FROM venue ORDER BY name";
                                                 
         private const string SqlDetailedVenue = "SELECT v.id, v.name, v.city_id, v.description, c.name AS 'city_name', s.abbreviation, s.name AS 'state_name', cat.id AS 'category_id', cat.name AS 'category_name'" +
-                                                "FROM venue v INNER JOIN city c ON v.city_id = c.id  INNER JOIN state s ON c.state_abbreviation = s.abbreviation INNER JOIN category_venue catv ON c.id = catv.venue_id INNER JOIN category cat ON catv.category_id = cat.id " +
+                                                "FROM venue v FULL OUTER JOIN city c ON v.city_id = c.id  FULL OUTER JOIN state s ON c.state_abbreviation = s.abbreviation FULL OUTER JOIN category_venue catv ON c.id = catv.venue_id FULL OUTER JOIN category cat ON catv.category_id = cat.id " +
                                                 "WHERE v.name = @name ORDER BY v.name, cat.name;";
 
         public VenueSqlDAO(string connectionString)
@@ -95,8 +95,14 @@ namespace Capstone.DAL
             venue.CityName = Convert.ToString(reader["city_name"]);
             venue.StateAbbreviation = Convert.ToString(reader["abbreviation"]);
             venue.StateName = Convert.ToString(reader["state_name"]);
+            if (reader["category_id"] != DBNull.Value)
+            {
             venue.CategoryId = Convert.ToInt32(reader["category_id"]);
+            }
+            if (reader["category_name"] != DBNull.Value)
+            {
             venue.CategoryName = Convert.ToString(reader["category_name"]);
+            }
 
             return venue;
         }
