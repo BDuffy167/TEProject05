@@ -55,10 +55,10 @@ namespace Capstone
                 {
                     case "1":
                         ShowVenueMenuNames();
-                        break;
+                        continue;
                     case "q":
-                        keepGoing = false;
-                        break;
+                        
+                        return;
                     default:
                         Console.WriteLine("Command provided was not a valid please try again");
                         break;
@@ -85,10 +85,12 @@ namespace Capstone
             IList<Venue> venues = venueDAO.GetVenueNames();
             int listNum = 1;
             List<string> venueList = new List<string>();
+            List<string> indexList = new List<string>();
 
             foreach (Venue i in venues)
             {
                 venueList.Add($"{listNum}) {i.VenueName}");
+                indexList.Add($"{listNum}");
                 listNum++;
             }
 
@@ -96,25 +98,22 @@ namespace Capstone
             {
                 string userInput = InputVenueMenuChoice();
 
-
-                foreach (string i in venueList)
+                if (indexList.Contains(userInput))
                 {
-                    if (userInput.ToLower() == i.Substring(0, 1))
-                    {
-                        IList<Venue> venue = venueDAO.GetDetailedVenueInfo(i[3..]);
-                        ShowDetailedVenueInfo(venue);
-                        return;
-                    }
+                    IList<Venue> venue = venueDAO.GetDetailedVenueInfo(venueList[int.Parse(userInput) - 1].Substring(userInput.Length + 2));
+                    ShowDetailedVenueInfo(venue);
+                    continue;
                 }
+                
                 if (userInput.ToLower() == "r")
                 {
-                    keepGoing = false;
+                    
                     return;
                 }
                 else
                 {
                     Console.WriteLine("Please input a valid choice.");
-                    break;
+                    continue;
                 }
             }
 
@@ -159,8 +158,8 @@ namespace Capstone
                         MakeReservation();
                         break;
                     case "r":
-                        keepGoing = false;
-                        break;
+                        
+                        return;
                     default:
                         Console.WriteLine("Command provided was not a valid please try again");
                         break;
