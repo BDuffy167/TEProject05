@@ -45,9 +45,7 @@ namespace Capstone
         // This displays the starting menu
         private void ShowMainMenu()
         {
-            bool keepGoing = true;
-
-            while (keepGoing)
+            while (true)
             {
                 string userInput = InputMainMenuChoice();
 
@@ -61,6 +59,7 @@ namespace Capstone
                         return;
                     default:
                         Console.WriteLine("Command provided was not a valid please try again");
+                        Console.WriteLine();
                         break;
                 }
             }
@@ -80,8 +79,6 @@ namespace Capstone
         // Displays full list of venue names
         public void ShowVenueMenuNames()
         {
-            bool keepGoing = true;
-
             IList<Venue> venues = venueDAO.GetVenueNames();
             int listNum = 1;
             List<string> venueList = new List<string>();
@@ -94,7 +91,7 @@ namespace Capstone
                 listNum++;
             }
 
-            while (keepGoing)
+            while (true)
             {
                 string userInput = InputVenueMenuChoice();
 
@@ -107,7 +104,6 @@ namespace Capstone
                 
                 if (userInput.ToLower() == "r")
                 {
-                    
                     return;
                 }
                 else
@@ -143,9 +139,7 @@ namespace Capstone
         // Displays detailed venue info to the user
         public void ShowDetailedVenueInfo(IList<Venue> venue) //I only add this arg to pass to the next method. Probably bad idea?
         {
-            bool keepGoing = true;
-
-            while (keepGoing)
+            while (true)
             {
                 string userInput = InputDetailedVenueChoice(venue);
 
@@ -158,11 +152,11 @@ namespace Capstone
                         MakeReservation();
                         break;
                     case "r":
-                        
                         return;
                     default:
                         Console.WriteLine("Command provided was not a valid please try again");
-                        break;
+                        Console.WriteLine();
+                        continue;
                 }
             }
         }
@@ -208,15 +202,16 @@ namespace Capstone
         {
             Console.WriteLine($"{spaces[0].VenueName} Spaces");
             Console.WriteLine();
-            string header = string.Format($"{"",-6}{"Name",-15}{"Open",-8}{"Close",-8}{"Daily Rate",-14}{"Max. Occupancy",-14}");
+            string header = string.Format($"{"",-4}{"Name",-25}{"Open",-8}{"Close",-8}{"Daily Rate",-14}{"Max. Occupancy",-14}");
             Console.WriteLine(header);
 
             int indexNum = 1;
 
             foreach (Space space in spaces)
             {
-                string spaceItem = string.Format($"{0,-6}{1,-15}{2,-8}{3,-8}{4,-14}{5,-14}", "#" + indexNum, space.SpaceName, space.OpenFrom, space.OpenTo, space.DailyRate, space.MaxOccupancy);
+                string spaceItem = string.Format($"#{indexNum,-3}{space.SpaceName,-25}{space.OpenFrom,-8}{space.OpenTo,-8}${space.DailyRate,-13}{space.MaxOccupancy,-14}");
                 Console.WriteLine(spaceItem);
+                indexNum++;
             }
 
             string userInput = Console.ReadLine();
@@ -226,7 +221,7 @@ namespace Capstone
         // Walks a user through searching for a reservation
         public void MakeReservation()
         {
-
+            
         }
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()

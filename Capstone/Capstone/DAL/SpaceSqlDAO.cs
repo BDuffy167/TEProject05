@@ -16,7 +16,7 @@ namespace Capstone.DAL
             this.connectionString = connectionString;
         }
 
-        public List<Space> GetSpaceInfo(string name)
+        public List<Space> GetSpaceInfo(string venueName)
         {
             List<Space> spaces = new List<Space>();
 
@@ -26,8 +26,8 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT id, venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy FROM space WHERE spaces = @spaces;", conn);
-                    cmd.Parameters.AddWithValue("@spaces", name);
+                    SqlCommand cmd = new SqlCommand("SELECT v.name AS 'venue_name', s.name, s.open_from, s.open_to, s.daily_rate, s.max_occupancy FROM space s INNER JOIN venue v ON s.venue_id = v.id WHERE v.name = @venueName", conn);
+                    cmd.Parameters.AddWithValue("@venueName", venueName);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -87,19 +87,20 @@ namespace Capstone.DAL
 
             if (reader["open_from"] != DBNull.Value)
             {
-                space.OpenFrom = Convert.ToDateTime(reader["open_from"]);
+                space.OpenFrom = Convert.ToInt32(reader["open_from"]);
             }
             if (reader["open_to"] != DBNull.Value)
             {
-                space.OpenTo = Convert.ToDateTime(reader["open_to"]);
+                space.OpenTo = Convert.ToInt32(reader["open_to"]);
             }
 
-            space.SpaceId = Convert.ToInt32(reader["id"]);
-            space.VenueID = Convert.ToInt32(reader["venue_id"]);
-            space.VenueName = Convert.ToString(reader["name"]);
-            space.IsAccessible = Convert.ToBoolean(reader["is_accessible"]);
-            space.DailyRate = Convert.ToDecimal(reader["daily_rate"]);
+            //space.SpaceId = Convert.ToInt32(reader["id"]);
+            //space.VenueID = Convert.ToInt32(reader["venue_id"]);
+            space.SpaceName = Convert.ToString(reader["name"]);
+            //space.IsAccessible = Convert.ToBoolean(reader["is_accessible"]);
+            space.DailyRate = Convert.ToDouble(reader["daily_rate"]);
             space.MaxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
+            space.VenueName = Convert.ToString(reader["venue_name"]);
 
             return space;
         }
