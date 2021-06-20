@@ -55,7 +55,7 @@ namespace Capstone
                         ShowVenueMenuNames();
                         continue;
                     case "q":
-                        
+
                         return;
                     default:
                         Console.WriteLine("Command provided was not a valid please try again");
@@ -101,7 +101,7 @@ namespace Capstone
                     ShowDetailedVenueInfo(venue);
                     continue;
                 }
-                
+
                 if (userInput.ToLower() == "r")
                 {
                     return;
@@ -148,9 +148,9 @@ namespace Capstone
                     case "1":
                         ShowSpaceMenu(venue[0].VenueName);
                         continue;
-                    case "2":
-                        MakeReservation();
-                        continue;
+                    //case "2":
+                    //    MakeReservation();
+                    //    continue;
                     case "r":
                         return;
                     default:
@@ -178,7 +178,7 @@ namespace Capstone
 
             Console.WriteLine("What would you like to do next?");
             Console.WriteLine("\t1) View Spaces");
-            Console.WriteLine("\t2) Search for Reservation");
+            // Console.WriteLine("\t2) Search for Reservation");  BONUS
             Console.WriteLine("\tR) Return to previous screen");
 
             string userInput = Console.ReadLine();
@@ -236,11 +236,33 @@ namespace Capstone
 
         }
         // Walks a user through searching for a reservation
-        public void MakeReservation()
-        {
-            
-        }
         public void MakeReservation(string venueName)
+        {
+            Console.Write("What is the start date of your reservation (MM/DD/YYY)? ");
+            string resStartDate = Console.ReadLine();
+            Console.Write("How many days will you need the space? ");
+            int resLength = int.Parse(Console.ReadLine());
+            Console.Write("How many people will be in attendance? ");
+            string resAttendance = Console.ReadLine();
+            Console.WriteLine();
+
+            List<Space> reservations = new List<Space>();
+            // get sql query for THIS venues
+
+            Console.WriteLine("The following spaces are available based on your needs:");
+            Console.WriteLine();
+
+            string header = string.Format($"{"Space #",-10}{"Name",-25}{"Daily Rate",-14}{"Max. Occupancy",-14}{"Accessible?",-14}{"Total Cost",-14}");
+            Console.WriteLine(header);
+
+            foreach (Space s in reservations)
+            {
+                string resItem = string.Format($"{s.VenueID + s.SpaceId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-14}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
+                Console.WriteLine(resItem);
+            }
+
+        }
+        public void MakeReservation()
         {
 
         }
@@ -249,7 +271,14 @@ namespace Capstone
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()
         {
-
+            Console.WriteLine("Confirmation #: ");
+            Console.WriteLine("Venue: ");
+            Console.WriteLine("Space: ");
+            Console.WriteLine("Reserved For: ");
+            Console.WriteLine("Attendees: ");
+            Console.WriteLine("Arrival Date: ");
+            Console.WriteLine("Depart Date: ");
+            Console.WriteLine("Total Cost: ");
         }
     }
 }
