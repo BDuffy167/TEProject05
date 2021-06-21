@@ -285,6 +285,7 @@ namespace Capstone
                 reservation.EndDate = resStartDate.AddDays(resLength - 1);
                 reservation.ReservedFor = resHolder;
 
+                reservationDAO.AddNewReservation(reservation);
             }
             indexNums.IndexOf(int.Parse(userSpaceVenueId));
         }

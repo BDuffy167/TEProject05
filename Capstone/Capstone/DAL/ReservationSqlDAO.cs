@@ -108,7 +108,7 @@ namespace Capstone.DAL
             return reservation;
         }
 
-        public bool AddNewReservation(Reservation newReservation)
+        public void AddNewReservation(Reservation newReservation)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace Capstone.DAL
                 throw;
             }
 
-            return true;
+         
 
         }
     }
