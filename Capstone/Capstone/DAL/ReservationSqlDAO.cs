@@ -14,6 +14,12 @@ namespace Capstone.DAL
                                                                 "WHERE (CAST('@arrival' AS date) BETWEEN start_date and end_date or" +
                                                                 "CAST('@depart' AS date) BETWEEN start_date and end_date or " +
                                                                  "CAST('@arrival' AS date) < start_date and cast('@depart' AS date) > end_date) and venue.id = '@venue_id'";
+
+        private const string SqlPrintNewReservation = "SELECT r.reservation_id, v.name, s.name, r.reserved_for, r.number_of_attendees, r.start_date, r.end_date, s.daily_rate" +
+                                                         "FROM reservation r INNER JOIN space s ON r.space_id = s.id INNER JOIN venue v ON s.id = v.id" +
+                                                         "WHERE r.reservation_id = @confirmation";
+
+
         public ReservationSqlDAO(string connectionString)
         {
             this.connectionString = connectionString;
@@ -50,7 +56,7 @@ namespace Capstone.DAL
             return reservations;
         }
 
-        private Reservation GetResConfirmation(int confirmationNum)
+        public Reservation GetResConfirmation(int confirmationNum)
         {
             Reservation reservation = new Reservation();
 
@@ -60,12 +66,9 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("select * from reservation join space on space.id = reservation.space_id join venue on venue.id = space.venue_id" +
-                                                                "where(CAST('@arrival' AS date) BETWEEN start_date and end_date or" +
-                                                                "CAST('@depart' AS date) BETWEEN start_date and end_date or " +
-                                                                 "CAST('@arrival' AS date) < start_date and cast('@depart' AS date) > end_date) and venue.id = '@venue_id'", conn);
-                    cmd.Parameters.AddWithValue("@arrive", reservation.StartDate);
-                    cmd.Parameters.AddWithValue("@depart", reservation.EndDate);
+                    SqlCommand cmd = new SqlCommand(SqlPrintNewReservation, conn);
+                    cmd.Parameters.AddWithValue("@confirmation", confirmationNum);
+                    
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
