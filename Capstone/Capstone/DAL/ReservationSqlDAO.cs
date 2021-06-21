@@ -107,11 +107,12 @@ namespace Capstone.DAL
                     conn.Open();
 
                     // Create the command
-                    SqlCommand cmd = new SqlCommand("", conn);
-                    //cmd.Parameters.AddWithValue("@countrycode", newReservation.CountryCode);
-                    //cmd.Parameters.AddWithValue("@language", newReservation.Name);
-                    //cmd.Parameters.AddWithValue("@isofficial", newReservation.IsOfficial);
-                    //cmd.Parameters.AddWithValue("@percentage", newReservation.Percentage);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO reservation VALUES (@SpaceId, @NumberOfAttendees, @StartDate, @EndDate, @ReservedFor)", conn);
+                    cmd.Parameters.AddWithValue("@SpaceId", newReservation.SpaceId);
+                    cmd.Parameters.AddWithValue("@NumberOfAttendees", newReservation.NumberOfAttendees);
+                    cmd.Parameters.AddWithValue("@StartDate", newReservation.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", newReservation.EndDate);
+                    cmd.Parameters.AddWithValue("@ReservedFor", newReservation.ReservedFor);
 
                     // Execute the command
                     cmd.ExecuteNonQuery();
