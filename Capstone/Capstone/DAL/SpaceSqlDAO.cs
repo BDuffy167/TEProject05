@@ -13,8 +13,9 @@ namespace Capstone.DAL
         private const string SqlInputSpaceMenuChoice = "SELECT id, name, open_from, open_to, daily_rate, max_occupancy FROM space";
         private const string SqlGetOpenSpaces = "SELECT DISTINCT v.id, s.id, s.name, s.daily_rate, s.max_occupancy" +
                                                 "FROM reservation r INNER JOIN space s ON s.id = r.space_id  INNER JOIN venue v ON v.id = s.venue_id" +
-                                                "WHERE v.name = @VenueName AND CAST(@ResStartDate AS Date) NOT BETWEEN r.start_date AND r.end_date" +
-                                                    "AND CAST(@ResEndDate AS Date) NOT BETWEEN r.start_date AND r.end_date AND r.start_date NOT BETWEEN CAST(@ResStartDate AS Date) AND CAST(@ResEndDate AS Date) AND @ResAttendance <= s.max_occupancy;";
+                                                "WHERE v.name = @VenueName" +
+                                                    "AND (r.start_date NOT BETWEEN '@ResStartDate' AND '@ResEndDate' OR r.start_date NOT BETWEEN '@ResStartDat'e AND '@ResEndDate')" +
+                                                    "AND @ResAttendance <= s.max_occupancy;";
 
         public SpaceSqlDAO(string connectionString)
         {
@@ -54,9 +55,12 @@ namespace Capstone.DAL
             return spaces;
         }
 
-        public List<Space> GetOpenSpaces(string venueName, DateTime resStartDate, DateTime resEndDate, int resAttendance)
+        public List<Space> GetOpenSpaces(string venueName, DateTime resStartDate1, DateTime resEndDate1, int resAttendance)
         {
             List<Space> openSpaces = new List<Space>();
+
+            string resStartDate = resStartDate1.ToString("yyyy-MM-dd");
+            string resEndDate = resEndDate1.ToString("yyyy-MM-dd");
 
             try
             {
