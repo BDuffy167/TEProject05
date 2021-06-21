@@ -244,12 +244,15 @@ namespace Capstone
             Console.Write("How many days will you need the space? ");
             int resLength = int.Parse(Console.ReadLine()); // fix for bad input
 
+            DateTime resEndDate = resStartDate.AddDays(resLength - 1);
+
             Console.Write("How many people will be in attendance? ");
             int resAttendance = int.Parse(Console.ReadLine()); // fix for bad input
             Console.WriteLine();
 
             List<Space> openSpaces = new List<Space>();
-            // Sql method query for THIS venue
+
+            openSpaces = spaceDAO.GetOpenSpaces(venueName, resStartDate, resEndDate, resAttendance);
 
             Console.WriteLine("The following spaces are available based on your needs:");
             Console.WriteLine();
@@ -285,11 +288,6 @@ namespace Capstone
             }
             indexNums.IndexOf(int.Parse(userSpaceVenueId));
         }
-      
-
-
-
-
 
         // Displays details of a successful reservation
         public void PrintReservationConfirmation(int confirmationNum)

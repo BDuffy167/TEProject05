@@ -29,7 +29,7 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(SqlGetAvailableReservations, conn);
+                    SqlCommand cmd = new SqlCommand(SqlReservation, conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
