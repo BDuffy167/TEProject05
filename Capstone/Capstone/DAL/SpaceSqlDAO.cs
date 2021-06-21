@@ -101,7 +101,7 @@ namespace Capstone.DAL
             space.DailyRate = Convert.ToDouble(reader["daily_rate"]);
             space.MaxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
             space.VenueName = Convert.ToString(reader["venue_name"]);
-
+           // return month = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(monthIndex);
             return space;
         }
 

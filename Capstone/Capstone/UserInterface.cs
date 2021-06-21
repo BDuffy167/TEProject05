@@ -277,6 +277,9 @@ namespace Capstone
         // Displays details of a successful reservation
         public void PrintReservationConfirmation(int confirmationNum)
         {
+            List<Reservation> reservations = new List<Reservation>();
+
+            
             //Sql method to call the reservation.
 
             Console.WriteLine($"Confirmation #: ");

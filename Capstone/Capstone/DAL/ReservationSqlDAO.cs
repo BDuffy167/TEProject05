@@ -10,6 +10,10 @@ namespace Capstone.DAL
     {
         private readonly string connectionString;
         private const string SqlGetAvailableReservations = "SELECT * FROM reservation WHERE(start_date) between GETDATE() and(GETDATE() + 30) ORDER BY end_date";
+        private const string SqlReservation = "SELECT * FROM reservation join space on space.id = reservation.space_id join venue on venue.id = space.venue_id" +
+                                                                "WHERE (CAST('@arrival' AS date) BETWEEN start_date and end_date or" +
+                                                                "CAST('@depart' AS date) BETWEEN start_date and end_date or " +
+                                                                 "CAST('@arrival' AS date) < start_date and cast('@depart' AS date) > end_date) and venue.id = '@venue_id'";
         public ReservationSqlDAO(string connectionString)
         {
             this.connectionString = connectionString;
@@ -56,7 +60,13 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("", conn);
+                    SqlCommand cmd = new SqlCommand("select * from reservation join space on space.id = reservation.space_id join venue on venue.id = space.venue_id" +
+                                                                "where(CAST('@arrival' AS date) BETWEEN start_date and end_date or" +
+                                                                "CAST('@depart' AS date) BETWEEN start_date and end_date or " +
+                                                                 "CAST('@arrival' AS date) < start_date and cast('@depart' AS date) > end_date) and venue.id = '@venue_id'", conn);
+                    cmd.Parameters.AddWithValue("@arrive", reservation.StartDate);
+                    cmd.Parameters.AddWithValue("@depart", reservation.EndDate);
+
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -69,6 +79,8 @@ namespace Capstone.DAL
                         reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
                         reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
                         reservation.DailyRate = Convert.ToDouble(reader["daily_rate"]);
+                        reservation.CreatedBooking = Convert.ToDateTime(reader["create_date"]);
+
                     }
                 }
             }
