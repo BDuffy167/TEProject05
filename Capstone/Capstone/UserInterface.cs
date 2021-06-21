@@ -238,7 +238,7 @@ namespace Capstone
         // Walks a user through searching for a reservation
         public void MakeReservation(string venueName)
         {
-            Console.Write("What is the start date of your reservation (MM/DD/YYY)? ");
+            Console.Write("What is the start date of your reservation (MM/DD/YYYY)? ");
             string resStartDate = Console.ReadLine();
             Console.Write("How many days will you need the space? ");
             int resLength = int.Parse(Console.ReadLine());
@@ -246,8 +246,8 @@ namespace Capstone
             string resAttendance = Console.ReadLine();
             Console.WriteLine();
 
-            List<Space> reservations = new List<Space>();
-            // get sql query for THIS venues
+            List<Space> openSpaces = new List<Space>();
+            // Sql method query for THIS venue
 
             Console.WriteLine("The following spaces are available based on your needs:");
             Console.WriteLine();
@@ -255,30 +255,38 @@ namespace Capstone
             string header = string.Format($"{"Space #",-10}{"Name",-25}{"Daily Rate",-14}{"Max. Occupancy",-14}{"Accessible?",-14}{"Total Cost",-14}");
             Console.WriteLine(header);
 
-            foreach (Space s in reservations)
+            foreach (Space s in openSpaces)
             {
                 string resItem = string.Format($"{s.VenueID + s.SpaceId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-14}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
                 Console.WriteLine(resItem);
             }
 
-        }
-        public void MakeReservation()
-        {
+            Console.Write("Which space would you like to reserve (enter 0 to cancel)? ");
+            string spaceVenueId = Console.ReadLine();
+            Console.Write("Who is this reservation for? ");
+            string resHolder = Console.ReadLine();
 
+           
         }
+      
+
+
+
 
 
         // Displays details of a successful reservation
-        public void PrintReservationConfirmation()
+        public void PrintReservationConfirmation(int confirmationNum)
         {
-            Console.WriteLine("Confirmation #: ");
-            Console.WriteLine("Venue: ");
-            Console.WriteLine("Space: ");
-            Console.WriteLine("Reserved For: ");
-            Console.WriteLine("Attendees: ");
-            Console.WriteLine("Arrival Date: ");
-            Console.WriteLine("Depart Date: ");
-            Console.WriteLine("Total Cost: ");
+            //Sql method to call the reservation.
+
+            Console.WriteLine($"Confirmation #: ");
+            Console.WriteLine($"Venue: ");
+            Console.WriteLine($"Space: ");
+            Console.WriteLine($"Reserved For: ");
+            Console.WriteLine($"Attendees: ");
+            Console.WriteLine($"Arrival Date: ");
+            Console.WriteLine($"Depart Date: ");
+            Console.WriteLine($"Total Cost: ");
         }
     }
 }

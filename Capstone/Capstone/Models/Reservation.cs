@@ -12,5 +12,8 @@ namespace Capstone.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string ReservedFor { get; set; }
+        public string VenueName { get; set; }
+        public string SpaceName { get; set; }
+        public double DailyRate { get; set; }
     }
 }

@@ -45,6 +45,43 @@ namespace Capstone.DAL
             }
             return reservations;
         }
+
+        private Reservation GetResConfirmation(int confirmationNum)
+        {
+            Reservation reservation = new Reservation();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("", conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        reservation.ReservationId = Convert.ToInt32(reader["reservation_id"]);
+                        reservation.VenueName = Convert.ToString(reader["venue_name"]);
+                        reservation.SpaceName = Convert.ToString(reader["space_name"]);
+                        reservation.ReservedFor = Convert.ToString(reader["reserved_for"]);
+                        reservation.NumberOfAttendees = Convert.ToInt32(reader["number_of_attendees"]);
+                        reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
+                        reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
+                        reservation.DailyRate = Convert.ToDouble(reader["daily_rate"]);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("An error occured communicating with the database");
+                Console.WriteLine(ex.Message);
+            }
+            return reservation;
+
+        }
+
+
         private Reservation ConvertReaderToReservation(SqlDataReader reader, IList<Reservation> reservations)
         {
             Reservation reservation = new Reservation();
@@ -55,8 +92,41 @@ namespace Capstone.DAL
             reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
             reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
             reservation.ReservedFor = Convert.ToString(reader["reserved_for"]);
-            
+
             return reservation;
+        }
+
+        public bool AddNewReservation(Reservation newReservation)
+        {
+            try
+            {
+                // Create a connection
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    // Open the connection
+                    conn.Open();
+
+                    // Create the command
+                    SqlCommand cmd = new SqlCommand("", conn);
+                    //cmd.Parameters.AddWithValue("@countrycode", newReservation.CountryCode);
+                    //cmd.Parameters.AddWithValue("@language", newReservation.Name);
+                    //cmd.Parameters.AddWithValue("@isofficial", newReservation.IsOfficial);
+                    //cmd.Parameters.AddWithValue("@percentage", newReservation.Percentage);
+
+                    // Execute the command
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("An error occurred saving the new language.");
+                Console.WriteLine(ex.Message);
+
+                throw;
+            }
+
+            return true;
+
         }
     }
 }
