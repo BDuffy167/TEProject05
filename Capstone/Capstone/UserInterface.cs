@@ -239,11 +239,13 @@ namespace Capstone
         public void MakeReservation(string venueName)
         {
             Console.Write("What is the start date of your reservation (MM/DD/YYYY)? ");
-            string resStartDate = Console.ReadLine();
+            DateTime resStartDate = DateTime.Parse(Console.ReadLine()); // fix for bad input
+
             Console.Write("How many days will you need the space? ");
-            int resLength = int.Parse(Console.ReadLine());
+            int resLength = int.Parse(Console.ReadLine()); // fix for bad input
+
             Console.Write("How many people will be in attendance? ");
-            string resAttendance = Console.ReadLine();
+            int resAttendance = int.Parse(Console.ReadLine()); // fix for bad input
             Console.WriteLine();
 
             List<Space> openSpaces = new List<Space>();
@@ -254,19 +256,34 @@ namespace Capstone
 
             string header = string.Format($"{"Space #",-10}{"Name",-25}{"Daily Rate",-14}{"Max. Occupancy",-14}{"Accessible?",-14}{"Total Cost",-14}");
             Console.WriteLine(header);
+            List<int> indexNums = new List<int>();
 
             foreach (Space s in openSpaces)
             {
-                string resItem = string.Format($"{s.VenueID + s.SpaceId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-14}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
+                string resItem = string.Format($"{s.SpaceVenueId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-14}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
                 Console.WriteLine(resItem);
+                indexNums.Add(s.VenueId + s.SpaceId);
             }
 
             Console.Write("Which space would you like to reserve (enter 0 to cancel)? ");
-            string spaceVenueId = Console.ReadLine();
+            string userSpaceVenueId = Console.ReadLine();
             Console.Write("Who is this reservation for? ");
             string resHolder = Console.ReadLine();
 
-           
+           if (indexNums.Contains(int.Parse(userSpaceVenueId)))
+            {
+                Space space = openSpaces[indexNums.IndexOf(int.Parse(userSpaceVenueId))];
+
+                Reservation reservation = new Reservation();
+
+                reservation.SpaceId = space.SpaceId;
+                reservation.NumberOfAttendees = resAttendance;
+                reservation.StartDate = resStartDate;
+                reservation.EndDate = resStartDate.AddDays(resLength - 1);
+                reservation.ReservedFor = resHolder;
+
+            }
+            indexNums.IndexOf(int.Parse(userSpaceVenueId));
         }
       
 
