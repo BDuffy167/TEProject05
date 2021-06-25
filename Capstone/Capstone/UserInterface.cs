@@ -304,6 +304,7 @@ namespace Capstone
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()
         {
+            
             List<Reservation> reservations = new List<Reservation>();
 
             
@@ -317,6 +318,7 @@ namespace Capstone
             Console.WriteLine($"Arrival Date: ");
             Console.WriteLine($"Depart Date: ");
             Console.WriteLine($"Total Cost: ");
+        
         }
     }
 }

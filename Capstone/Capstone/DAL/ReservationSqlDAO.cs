@@ -138,9 +138,6 @@ namespace Capstone.DAL
 
                 throw;
             }
-
-         
-
         }
 
         public Reservation GetPrintedReservation(Reservation newReservation)
@@ -160,11 +157,6 @@ namespace Capstone.DAL
                       " s.name AS 'space_name', r.reserved_for, r.number_of_attendees, r.start_date, r.end_date, s.daily_rate " +
                         "FROM reservation r JOIN space s ON r.space_id = s.id JOIN venue v ON s.venue_id = v.id " +
                         "ORDER BY r.reservation_id DESC", conn);
-                    cmd.Parameters.AddWithValue("@SpaceId", newReservation.SpaceId);
-                    cmd.Parameters.AddWithValue("@NumberOfAttendees", newReservation.NumberOfAttendees);
-                    cmd.Parameters.AddWithValue("@StartDate", newReservation.StartDate);
-                    cmd.Parameters.AddWithValue("@EndDate", newReservation.EndDate);
-                    cmd.Parameters.AddWithValue("@ReservedFor", newReservation.ReservedFor);
 
                     // Execute the command
                     cmd.ExecuteNonQuery();

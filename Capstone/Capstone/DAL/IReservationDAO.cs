@@ -8,5 +8,7 @@ namespace Capstone.DAL
     public interface IReservationDAO
     {
         void AddNewReservation(Reservation reservation);
+
+        Reservation GetPrintedReservation();
     }
 }
