@@ -82,8 +82,6 @@ namespace Capstone.DAL
                         reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
                         reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
                         reservation.DailyRate = Convert.ToDouble(reader["daily_rate"]);
-                        reservation.CreatedBooking = Convert.ToDateTime(reader["create_date"]);
-
                     }
                 }
             }
@@ -145,9 +143,39 @@ namespace Capstone.DAL
 
         }
 
-        public void GetPrintedReservation ()
+        public Reservation GetPrintedReservation(Reservation newReservation)
         {
+            Reservation reservation = new Reservation();
 
+            try
+            {
+                // Create a connection
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    // Open the connection
+                    conn.Open();
+
+                    // Create the command
+                    SqlCommand cmd = new SqlCommand("SELECT TOP 1 r.reservation_id, v.name AS 'venue_name', " +
+                      " s.name AS 'space_name', r.reserved_for, r.number_of_attendees, r.start_date, r.end_date, s.daily_rate " +
+                        "FROM reservation r JOIN space s ON r.space_id = s.id JOIN venue v ON s.venue_id = v.id " +
+                        "ORDER BY r.reservation_id DESC", conn);
+                    cmd.Parameters.AddWithValue("@SpaceId", newReservation.SpaceId);
+                    cmd.Parameters.AddWithValue("@NumberOfAttendees", newReservation.NumberOfAttendees);
+                    cmd.Parameters.AddWithValue("@StartDate", newReservation.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", newReservation.EndDate);
+                    cmd.Parameters.AddWithValue("@ReservedFor", newReservation.ReservedFor);
+
+                    // Execute the command
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("An error occurred getting the new reservation.");
+                Console.WriteLine(ex.Message);
+            }
+            return reservation;
         }
     }
 }
