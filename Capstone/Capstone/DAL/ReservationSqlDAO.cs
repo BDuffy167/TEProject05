@@ -144,5 +144,10 @@ namespace Capstone.DAL
          
 
         }
+
+        public void GetPrintedReservation ()
+        {
+
+        }
     }
 }

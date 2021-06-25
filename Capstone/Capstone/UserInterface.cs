@@ -35,6 +35,7 @@ namespace Capstone
             this.venueDAO = new VenueSqlDAO(connectionString);
             this.reservationDAO = new ReservationSqlDAO(connectionString);
             this.spaceDAO = new SpaceSqlDAO(connectionString);
+            
         }
 
         public void Run()
@@ -265,11 +266,14 @@ namespace Capstone
             {
                 string resItem = string.Format($"{s.SpaceVenueId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-16}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
                 Console.WriteLine(resItem);
-                indexNums.Add(s.VenueId + s.SpaceId);
+                indexNums.Add(s.SpaceVenueId);
             }
 
             Console.Write("Which space would you like to reserve (enter 0 to cancel)? ");
             string userSpaceVenueId = Console.ReadLine();
+
+          
+
             Console.Write("Who is this reservation for? ");
             string resHolder = Console.ReadLine();
 
@@ -286,14 +290,19 @@ namespace Capstone
                 reservation.ReservedFor = resHolder;
 
                 reservationDAO.AddNewReservation(reservation);
-            }
-            indexNums.IndexOf(int.Parse(userSpaceVenueId));
 
+                PrintReservationConfirmation();
+            }
+            //indexNums.IndexOf(int.Parse(userSpaceVenueId));
+            if (int.Parse(userSpaceVenueId) == 0)
+            {
+                return;
+            }
             
         }
 
         // Displays details of a successful reservation
-        public void PrintReservationConfirmation(int confirmationNum)
+        public void PrintReservationConfirmation()
         {
             List<Reservation> reservations = new List<Reservation>();
 
