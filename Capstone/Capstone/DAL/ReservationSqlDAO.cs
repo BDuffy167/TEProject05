@@ -129,6 +129,8 @@ namespace Capstone.DAL
 
                     // Execute the command
                     cmd.ExecuteNonQuery();
+
+
                 }
             }
             catch (SqlException ex)
@@ -140,7 +142,7 @@ namespace Capstone.DAL
             }
         }
 
-        public Reservation GetPrintedReservation(Reservation newReservation)
+        public Reservation GetPrintedReservation()
         {
             Reservation reservation = new Reservation();
 
@@ -159,7 +161,19 @@ namespace Capstone.DAL
                         "ORDER BY r.reservation_id DESC", conn);
 
                     // Execute the command
-                    cmd.ExecuteNonQuery();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        reservation.ReservationId = Convert.ToInt32(reader["reservation_id"]);
+                        reservation.VenueName = Convert.ToString(reader["venue_name"]);
+                        reservation.SpaceName = Convert.ToString(reader["space_name"]);
+                        reservation.ReservedFor = Convert.ToString(reader["reserved_for"]);
+                        reservation.NumberOfAttendees = Convert.ToInt32(reader["number_of_attendees"]);
+                        reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
+                        reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
+                        reservation.DailyRate = Convert.ToDouble(reader["daily_rate"]);
+                    }
                 }
             }
             catch (SqlException ex)
