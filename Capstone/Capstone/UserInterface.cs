@@ -199,7 +199,7 @@ namespace Capstone
                 switch (userInput.ToLower())
                 {
                     case "1":
-                        MakeReservation(spaces[0].VenueName);
+                        MakeReservation(spaces[0].VenueId);
                         continue;
                     case "r":
                         return;
@@ -236,7 +236,7 @@ namespace Capstone
 
         }
         // Walks a user through searching for a reservation
-        public void MakeReservation(string venueName) //This is a bad method, split it up
+        public void MakeReservation(int venueId) //This is a bad method, split it up
         {
             Console.Write("What is the start date of your reservation (MM/DD/YYYY)? ");
             DateTime resStartDate = DateTime.Parse(Console.ReadLine()); // fix for bad input
@@ -252,18 +252,18 @@ namespace Capstone
 
             List<Space> openSpaces = new List<Space>();
 
-            openSpaces = spaceDAO.GetOpenSpaces(venueName, resStartDate, resEndDate, resAttendance);
+            openSpaces = spaceDAO.GetOpenSpaces(venueId, resStartDate, resEndDate, resAttendance);
 
             Console.WriteLine("The following spaces are available based on your needs:");
             Console.WriteLine();
 
-            string header = string.Format($"{"Space #",-10}{"Name",-25}{"Daily Rate",-14}{"Max. Occupancy",-14}{"Accessible?",-14}{"Total Cost",-14}");
+            string header = string.Format($"{"Space #",-10}{"Name",-25}{"Daily Rate",-14}{"Max. Occupancy",-16}{"Accessible?",-14}{"Total Cost",-14}");
             Console.WriteLine(header);
             List<int> indexNums = new List<int>();
 
             foreach (Space s in openSpaces)
             {
-                string resItem = string.Format($"{s.SpaceVenueId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-14}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
+                string resItem = string.Format($"{s.SpaceVenueId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-16}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
                 Console.WriteLine(resItem);
                 indexNums.Add(s.VenueId + s.SpaceId);
             }

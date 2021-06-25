@@ -8,6 +8,6 @@ namespace Capstone.DAL
    public interface ISpaceDAO
     {
         List<Space> GetSpaceInfo(string name);
-        List<Space> GetOpenSpaces(string venueName, DateTime resStartDate, DateTime resEndDate, int resAttendance);
+        List<Space> GetOpenSpaces(int venueId, DateTime resStartDate, DateTime resEndDate, int resAttendance);
     }
 }
