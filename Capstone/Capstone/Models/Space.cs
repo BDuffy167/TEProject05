@@ -20,7 +20,11 @@ namespace Capstone.Models
         {
             get
             {
-                return this.VenueId + this.SpaceId;
+                string strResult = this.VenueId.ToString() + this.SpaceId.ToString();
+
+                int intResult = Convert.ToInt32(strResult);
+
+                return intResult;
             }
         }
     }
