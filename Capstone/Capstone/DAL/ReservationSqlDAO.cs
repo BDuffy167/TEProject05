@@ -82,7 +82,7 @@ namespace Capstone.DAL
                         reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
                         reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
                         reservation.DailyRate = Convert.ToDouble(reader["daily_rate"]);
-                        reservation.CreatedBooking = Convert.ToDateTime(reader["create_date"]);
+                        //reservation.CreatedBooking = Convert.ToDateTime(reader["create_date"]);
 
                     }
                 }
@@ -145,9 +145,9 @@ namespace Capstone.DAL
 
         }
 
-        public void GetPrintedReservation ()
+        public Reservation GetPrintedReservation()
         {
-
+            return new Reservation();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Capstone
             this.venueDAO = new VenueSqlDAO(connectionString);
             this.reservationDAO = new ReservationSqlDAO(connectionString);
             this.spaceDAO = new SpaceSqlDAO(connectionString);
-            
+
         }
 
         public void Run()
@@ -238,7 +238,7 @@ namespace Capstone
         }
         // Walks a user through searching for a reservation
         public void MakeReservation(int venueId) //This is a bad method, split it up
-        {   
+        {
             Console.Write("What is the start date of your reservation (MM/DD/YYYY)? ");
             DateTime resStartDate = DateTime.Parse(Console.ReadLine()); // fix for bad input
 
@@ -272,13 +272,14 @@ namespace Capstone
             Console.Write("Which space would you like to reserve (enter 0 to cancel)? ");
             string userSpaceVenueId = Console.ReadLine();
 
-          
 
-            Console.Write("Who is this reservation for? ");
-            string resHolder = Console.ReadLine();
 
-           if (indexNums.Contains(int.Parse(userSpaceVenueId)))
+
+            if (indexNums.Contains(int.Parse(userSpaceVenueId)))
             {
+                Console.Write("Who is this reservation for? ");
+                string resHolder = Console.ReadLine();
+
                 Space space = openSpaces[indexNums.IndexOf(int.Parse(userSpaceVenueId))];
 
                 Reservation reservation = new Reservation();
@@ -294,29 +295,30 @@ namespace Capstone
                 PrintReservationConfirmation();
             }
             //indexNums.IndexOf(int.Parse(userSpaceVenueId));
-            if (int.Parse(userSpaceVenueId) == 0)
-            {
-                return;
-            }
-            
+
+
+            return;
+
+
         }
 
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()
         {
-            List<Reservation> reservations = new List<Reservation>();
+            Reservation reservation = reservationDAO.GetPrintedReservation();
 
-            
-            //Sql method to call the reservation.
+            double totalCost = reservation.DailyRate * (reservation.EndDate - reservation.StartDate).TotalDays;
 
-            Console.WriteLine($"Confirmation #: ");
-            Console.WriteLine($"Venue: ");
-            Console.WriteLine($"Space: ");
-            Console.WriteLine($"Reserved For: ");
-            Console.WriteLine($"Attendees: ");
-            Console.WriteLine($"Arrival Date: ");
-            Console.WriteLine($"Depart Date: ");
-            Console.WriteLine($"Total Cost: ");
+            Console.WriteLine("Thanks for submitting your reservation! The details for your event are listed below:");
+
+            Console.WriteLine($"Confirmation #: {reservation.ReservationId}");
+            Console.WriteLine($"Venue: {reservation.VenueName}");
+            Console.WriteLine($"Space: {reservation.SpaceName}");
+            Console.WriteLine($"Reserved For: {reservation.ReservedFor}");
+            Console.WriteLine($"Attendees: {reservation.NumberOfAttendees}");
+            Console.WriteLine($"Arrival Date: {reservation.StartDate}");
+            Console.WriteLine($"Depart Date: {reservation.EndDate}");
+            Console.WriteLine($"Total Cost: {totalCost}");
         }
     }
 }
