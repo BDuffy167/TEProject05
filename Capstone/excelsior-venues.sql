@@ -62,6 +62,48 @@ CREATE TABLE reservation (
   reserved_for VARCHAR(100) NOT NULL
 )
 
+SELECT name FROM venue ORDER BY name ASC
+SELECT * FROM venue v INNER JOIN city c ON c.id = v.city_id 
+
+SELECT *, STRING_AGG(category., ', ')
+FROM category_venue
+SELECT * FROM category c INNER JOIN venue v ON v.id = c.id
+
+SELECT * FROM venue ORDER BY name
+
+SELECT * FROM venue
+
+SELECT * FROM space
+
+
+SELECT * FROM reservation WHERE(start_date) between GETDATE() and(GETDATE() + 30) ORDER BY end_date
+
+
+SELECT * 
+From reservation
+WHERE reservation_id = reservation.reservation_id
+
+SELECT id, name, GETDATE() open_from,CONVERT(char(3), GetDate(), 0),GETDATE() open_to, CONVERT(char(3), GetDate(), 0), daily_rate, max_occupancy FROM space
+Select Convert(char(3), GetDate(), 0)
+
+SELECT * FROM space
+
+SELECT GETDATE() open_from, CONVERT(char(3), GetDate(), 0), DATENAME(month,GETDATE()) 'Month Name'
+
+Select Convert(char(3), GetDate(), 0)
+
+SELECT v.id, s.name, v.city_id, v.description, c.name AS 'space_number', s.abbreviation, s.name AS 'state_name', cat.id AS 'category_id', cat.name AS 'category_name'
+FROM venue v FULL OUTER JOIN city c ON v.city_id = c.id  FULL OUTER JOIN state s ON c.state_abbreviation = s.abbreviation FULL OUTER JOIN category_venue catv ON c.id = catv.venue_id FULL OUTER JOIN category cat ON catv.category_id = cat.id 
+WHERE v.name = '@name' ORDER BY v.name, cat.name
+
+select * from reservation 
+join space on space.id = reservation.space_id 
+join venue on venue.id = space.venue_id
+ where(CAST(@start_date AS date) BETWEEN start_date and end_date or
+CAST(@depart AS date) BETWEEN start_date and end_date or
+CAST(@arrival AS date) < start_date and cast(@depart AS date) > end_date) and
+venue.id = @venue_id
+
 SET IDENTITY_INSERT venue ON 
 -- Hidden Owl Eatery
 INSERT INTO venue (id, name, city_id, description) VALUES (1, 'Hidden Owl Eatery', 1, 'This venue has plenty of "property" to enjoy. Roll the dice and check out all of our spaces.');

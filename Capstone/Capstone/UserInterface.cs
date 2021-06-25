@@ -237,7 +237,7 @@ namespace Capstone
         }
         // Walks a user through searching for a reservation
         public void MakeReservation(int venueId) //This is a bad method, split it up
-        {
+        {   
             Console.Write("What is the start date of your reservation (MM/DD/YYYY)? ");
             DateTime resStartDate = DateTime.Parse(Console.ReadLine()); // fix for bad input
 
