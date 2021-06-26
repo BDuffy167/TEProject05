@@ -267,7 +267,18 @@ namespace Capstone
 
             foreach (Space s in openSpaces)
             {
-                string resItem = string.Format($"{s.SpaceVenueId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-16}{s.IsAccessible,-14}${s.DailyRate * resLength,-13}");
+                string isAccessible = "";
+
+                if (s.IsAccessible)
+                {
+                    isAccessible = "Yes";
+                }
+                else
+                {
+                    isAccessible = "No";
+                }
+
+                string resItem = string.Format($"{s.SpaceVenueId,-10}{s.SpaceName,-25}${s.DailyRate,-13}{s.MaxOccupancy,-16}{isAccessible,-14}${s.DailyRate * resLength,-13}");
                 Console.WriteLine(resItem);
                 indexNums.Add(s.SpaceVenueId);
             }
