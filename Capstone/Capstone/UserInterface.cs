@@ -249,15 +249,52 @@ namespace Capstone
             DateTime resStartDate = CLIHelper.GetDateTime("What is the start date of your reservation (MM/DD/YYYY)?");
 
             int resLength = CLIHelper.GetInteger("How many days will you need the space?");
-            DateTime resEndDate = resStartDate.AddDays(resLength - 1);
+            DateTime resEndDate = resStartDate.AddDays(resLength - 1); // Stop user from inputing negative number
 
             int resAttendance = CLIHelper.GetInteger("How many people will be in attendance?");
             Console.WriteLine();
 
-            List<Space> openSpaces = new List<Space>();
+            List<Space> openSpaces = spaceDAO.GetOpenSpaces(venueId, resStartDate, resEndDate, resAttendance);
 
-            openSpaces = spaceDAO.GetOpenSpaces(venueId, resStartDate, resEndDate, resAttendance);
+            List<int> indexNums = PrintOpenSpaces(openSpaces, resLength);
 
+            //SelectReservationSpace(indexNums, openSpaces);
+            //
+            int userSpaceVenueId = -1;
+
+            while (userSpaceVenueId != 0)
+            {
+                userSpaceVenueId = CLIHelper.GetInteger("Which space would you like to reserve (enter 0 to cancel)?");
+
+                if (indexNums.Contains(userSpaceVenueId))
+                {
+                    Console.Write("Who is this reservation for? ");
+                    string resHolder = Console.ReadLine();
+
+                    Space space = openSpaces[indexNums.IndexOf(userSpaceVenueId)];
+
+                    Reservation reservation = new Reservation
+                    {
+                        SpaceId = space.SpaceId,
+                        NumberOfAttendees = resAttendance,
+                        StartDate = resStartDate,
+                        EndDate = resStartDate.AddDays(resLength - 1),
+                        ReservedFor = resHolder
+                    };
+
+                    reservationDAO.AddNewReservation(reservation);
+
+                    PrintReservationConfirmation();
+
+                    userSpaceVenueId = 0;
+                }
+            }
+
+            return;
+        }
+
+        public List<int> PrintOpenSpaces(List<Space> openSpaces, int resLength)
+        {
             Console.WriteLine("The following spaces are available based on your needs:");
             Console.WriteLine();
 
@@ -282,40 +319,13 @@ namespace Capstone
                 Console.WriteLine(resItem);
                 indexNums.Add(s.SpaceVenueId);
             }
-
-            int userSpaceVenueId = -1;
-
-            while (userSpaceVenueId != 0)
-            {
-                userSpaceVenueId = CLIHelper.GetInteger("Which space would you like to reserve (enter 0 to cancel)?");
-
-                if (indexNums.Contains(userSpaceVenueId))
-                {
-                    Console.Write("Who is this reservation for? ");
-                    string resHolder = Console.ReadLine();
-
-                    Space space = openSpaces[indexNums.IndexOf(userSpaceVenueId)];
-
-                    Reservation reservation = new Reservation();
-
-                    reservation.SpaceId = space.SpaceId;
-                    reservation.NumberOfAttendees = resAttendance;
-                    reservation.StartDate = resStartDate;
-                    reservation.EndDate = resStartDate.AddDays(resLength - 1);
-                    reservation.ReservedFor = resHolder;
-
-                    reservationDAO.AddNewReservation(reservation);
-
-                    PrintReservationConfirmation();
-
-                    userSpaceVenueId = 0;
-                }
-            }
-
-            return;
+            return indexNums;
         }
 
+        public void SelectReservationSpace(List<int> indexNums, List<Space> openSpaces)
+        {
 
+        }
 
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()
@@ -339,6 +349,9 @@ namespace Capstone
             Console.WriteLine($"Depart Date: {endDate}");
             Console.WriteLine($"Total Cost: ${totalCost}");
             Console.WriteLine();
+
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadLine();
 
             return;
         }
