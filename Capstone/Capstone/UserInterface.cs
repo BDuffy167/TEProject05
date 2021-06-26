@@ -249,7 +249,7 @@ namespace Capstone
             DateTime resStartDate = CLIHelper.GetDateTime("What is the start date of your reservation (MM/DD/YYYY)?");
 
             int resLength = CLIHelper.GetInteger("How many days will you need the space?");
-            DateTime resEndDate = resStartDate.AddDays(resLength - 1); // Stop user from inputing negative number
+            DateTime resEndDate = resStartDate.AddDays(resLength - 1); 
 
             int resAttendance = CLIHelper.GetInteger("How many people will be in attendance?");
             Console.WriteLine();
