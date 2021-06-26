@@ -20,6 +20,7 @@ namespace Capstone
                 if (numberOfAttempts > 0)
                 {
                     Console.WriteLine("Invalid input format. Please try again");
+                    Console.WriteLine();
                 }
 
                 Console.Write(message + " ");
@@ -94,6 +95,29 @@ namespace Capstone
             while (string.IsNullOrEmpty(userInput));
 
             return userInput;
+        }
+
+        public static DateTime GetDateTime(string message)
+        {
+            string userInput;
+            int numberOfAttempts = 0;
+            DateTime dateTimeValue;
+
+            do
+            {
+                if (numberOfAttempts > 0)
+                {
+                    Console.WriteLine("Invalid input format. Please try again");
+                    Console.WriteLine();
+                }
+
+                Console.Write(message + " ");
+                userInput = Console.ReadLine();
+                numberOfAttempts++;
+            }
+            while (!DateTime.TryParse(userInput, out dateTimeValue));
+
+            return dateTimeValue;
         }
     }
 }

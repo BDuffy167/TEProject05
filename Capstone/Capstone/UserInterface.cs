@@ -28,6 +28,7 @@ namespace Capstone
         private readonly IReservationDAO reservationDAO;
         private readonly ISpaceDAO spaceDAO;
 
+
         public UserInterface(string connectionString)
         {
             this.connectionString = connectionString;
@@ -168,10 +169,12 @@ namespace Capstone
             Console.WriteLine($"Location: {venue[0].CityName}, {venue[0].StateAbbreviation}");
             Console.Write("Category: ");
             string categoryString = "";
+
             foreach (Venue v in venue)
             {
                 categoryString += ($"{v.CategoryName}, ");
             }
+
             Console.WriteLine(categoryString.Substring(0, categoryString.Length - 2));
             Console.WriteLine();
             Console.WriteLine(venue[0].Description);
@@ -239,16 +242,12 @@ namespace Capstone
         // Walks a user through searching for a reservation
         public void MakeReservation(int venueId) //This is a bad method, split it up
         {
-            Console.Write("What is the start date of your reservation (MM/DD/YYYY)? ");
-            DateTime resStartDate = DateTime.Parse(Console.ReadLine()); // fix for bad input
+            DateTime resStartDate = CLIHelper.GetDateTime("What is the start date of your reservation (MM/DD/YYYY)?");
 
-            Console.Write("How many days will you need the space? ");
-            int resLength = int.Parse(Console.ReadLine()); // fix for bad input
-
+            int resLength = CLIHelper.GetInteger("How many days will you need the space?");
             DateTime resEndDate = resStartDate.AddDays(resLength - 1);
 
-            Console.Write("How many people will be in attendance? ");
-            int resAttendance = int.Parse(Console.ReadLine()); // fix for bad input
+            int resAttendance = CLIHelper.GetInteger("How many people will be in attendance?");
             Console.WriteLine();
 
             List<Space> openSpaces = new List<Space>();
@@ -269,37 +268,34 @@ namespace Capstone
                 indexNums.Add(s.SpaceVenueId);
             }
 
-            Console.Write("Which space would you like to reserve (enter 0 to cancel)? ");
-            string userSpaceVenueId = Console.ReadLine();
+            int userSpaceVenueId = -1;
 
-
-
-
-            if (indexNums.Contains(int.Parse(userSpaceVenueId)))
+            while (userSpaceVenueId != 0)
             {
-                Console.Write("Who is this reservation for? ");
-                string resHolder = Console.ReadLine();
+            userSpaceVenueId = CLIHelper.GetInteger("Which space would you like to reserve (enter 0 to cancel)?");
 
-                Space space = openSpaces[indexNums.IndexOf(int.Parse(userSpaceVenueId))];
+                if (indexNums.Contains(userSpaceVenueId))
+                {
+                    Console.Write("Who is this reservation for? ");
+                    string resHolder = Console.ReadLine();
 
-                Reservation reservation = new Reservation();
+                    Space space = openSpaces[indexNums.IndexOf(userSpaceVenueId)];
 
-                reservation.SpaceId = space.SpaceId;
-                reservation.NumberOfAttendees = resAttendance;
-                reservation.StartDate = resStartDate;
-                reservation.EndDate = resStartDate.AddDays(resLength - 1);
-                reservation.ReservedFor = resHolder;
+                    Reservation reservation = new Reservation();
 
-                reservationDAO.AddNewReservation(reservation);
+                    reservation.SpaceId = space.SpaceId;
+                    reservation.NumberOfAttendees = resAttendance;
+                    reservation.StartDate = resStartDate;
+                    reservation.EndDate = resStartDate.AddDays(resLength - 1);
+                    reservation.ReservedFor = resHolder;
 
-                PrintReservationConfirmation();
+                    reservationDAO.AddNewReservation(reservation);
+
+                    PrintReservationConfirmation();
+                }
             }
-            //indexNums.IndexOf(int.Parse(userSpaceVenueId));
-
 
             return;
-
-
         }
 
         // Displays details of a successful reservation
