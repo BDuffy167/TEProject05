@@ -15,6 +15,5 @@ namespace Capstone.Models
         public string VenueName { get; set; }
         public string SpaceName { get; set; }
         public double DailyRate { get; set; }
-        //public DateTime CreatedBooking { get; set; }
     }
 }

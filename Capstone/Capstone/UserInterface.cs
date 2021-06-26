@@ -307,6 +307,8 @@ namespace Capstone
                     reservationDAO.AddNewReservation(reservation);
 
                     PrintReservationConfirmation();
+
+                    userSpaceVenueId = 0;
                 }
             }
 
@@ -335,6 +337,8 @@ namespace Capstone
             Console.WriteLine($"Depart Date: {endDate}");
             Console.WriteLine($"Total Cost: ${totalCost}");
             Console.WriteLine();
+
+            return;
         }
     }
 }

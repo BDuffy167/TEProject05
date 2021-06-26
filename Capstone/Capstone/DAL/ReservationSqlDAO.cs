@@ -9,7 +9,6 @@ namespace Capstone.DAL
     public class ReservationSqlDAO : IReservationDAO
     {
         private readonly string connectionString;
-        private const string SqlGetAvailableReservations = "SELECT * FROM reservation WHERE(start_date) between GETDATE() and(GETDATE() + 30) ORDER BY end_date";
         private const string SqlReservation = "SELECT * FROM reservation join space on space.id = reservation.space_id join venue on venue.id = space.venue_id" +
                                                                 "WHERE (CAST('@arrival' AS date) BETWEEN start_date and end_date or" +
                                                                 "CAST('@depart' AS date) BETWEEN start_date and end_date or " +
@@ -69,7 +68,6 @@ namespace Capstone.DAL
                     SqlCommand cmd = new SqlCommand(SqlPrintNewReservation, conn);
                     cmd.Parameters.AddWithValue("@confirmation", confirmationNum);
                     
-
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -93,22 +91,6 @@ namespace Capstone.DAL
             return reservation;
 
         }
-
-
-        private Reservation ConvertReaderToReservation(SqlDataReader reader, IList<Reservation> reservations)
-        {
-            Reservation reservation = new Reservation();
-
-            reservation.ReservationId = Convert.ToInt32(reader["id"]);
-            reservation.SpaceId = Convert.ToInt32(reader["space_id"]);
-            reservation.NumberOfAttendees = Convert.ToInt32(reader["number_of_attendees"]);
-            reservation.StartDate = Convert.ToDateTime(reader["start_date"]);
-            reservation.EndDate = Convert.ToDateTime(reader["end_date"]);
-            reservation.ReservedFor = Convert.ToString(reader["reserved_for"]);
-
-            return reservation;
-        }
-
         public void AddNewReservation(Reservation newReservation)
         {
             try
@@ -129,8 +111,6 @@ namespace Capstone.DAL
 
                     // Execute the command
                     cmd.ExecuteNonQuery();
-
-
                 }
             }
             catch (SqlException ex)

@@ -9,8 +9,6 @@ namespace Capstone.DAL
     public class SpaceSqlDAO : ISpaceDAO
     {
         private readonly string connectionString;
-        private const string SqlGetSpaceInfo = "SELECT id, venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy FROM space";
-        private const string SqlInputSpaceMenuChoice = "SELECT id, name, open_from, open_to, daily_rate, max_occupancy FROM space";
         private const string SqlGetOpenSpaces = "SELECT s.name, s.open_from, s.open_to, s.daily_rate, s.max_occupancy, s.id, s.venue_id, s.is_accessible FROM space s WHERE venue_id = @VenueId AND s.max_occupancy >= @ResAttendance AND s.id NOT IN (SELECT s.id from reservation r JOIN space s on r.space_id = s.id WHERE s.venue_id =  6 AND r.end_date >= @ResStartDate AND r.start_date <= @ResEndDate)";
 
         public SpaceSqlDAO(string connectionString)
@@ -54,9 +52,6 @@ namespace Capstone.DAL
         public List<Space> GetOpenSpaces(int venueId, DateTime resStartDate, DateTime resEndDate, int resAttendance)
         {
             List<Space> openSpaces = new List<Space>();
-
-            //string resStartDate = resStartDate1.ToString("yyyy-MM-dd");
-            //string resEndDate = resEndDate1.ToString("yyyy-MM-dd");
 
             try
             {
@@ -109,8 +104,6 @@ namespace Capstone.DAL
             space.IsAccessible = Convert.ToBoolean(reader["is_accessible"]);
             space.DailyRate = Convert.ToDouble(reader["daily_rate"]);
             space.MaxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
-            //space.VenueName = Convert.ToString(reader["venue_name"]);
-            // return month = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(monthIndex);
             return space;
         }
 
