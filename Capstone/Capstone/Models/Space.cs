@@ -11,8 +11,8 @@ namespace Capstone.Models
         public string SpaceName { get; set; }
         public string VenueName { get; set; }
         public bool IsAccessible { get; set; }
-        public int? OpenFrom { get; set; }
-        public int? OpenTo { get; set; }
+        public int OpenFrom { get; set; } = 13;
+        public int OpenTo { get; set; } = 13;
         public double DailyRate { get; set; } = 0.00d;
         public int MaxOccupancy { get; set; }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Capstone.Models;
+using System.Globalization;
 
 namespace Capstone
 {
@@ -226,7 +227,10 @@ namespace Capstone
 
             foreach (Space space in spaces)
             {
-                string spaceItem = string.Format($"#{indexNum,-3}{space.SpaceName,-25}{space.OpenFrom,-8}{space.OpenTo,-8}${space.DailyRate,-13}{space.MaxOccupancy,-14}");
+                string openFrom = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(space.OpenFrom);
+                string openTo = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(space.OpenTo);
+
+                string spaceItem = string.Format($"#{indexNum,-3}{space.SpaceName,-25}{openFrom,-8}{openTo,-8}${space.DailyRate,-13}{space.MaxOccupancy,-14}");
                 Console.WriteLine(spaceItem);
                 indexNum++;
             }
@@ -272,7 +276,7 @@ namespace Capstone
 
             while (userSpaceVenueId != 0)
             {
-            userSpaceVenueId = CLIHelper.GetInteger("Which space would you like to reserve (enter 0 to cancel)?");
+                userSpaceVenueId = CLIHelper.GetInteger("Which space would you like to reserve (enter 0 to cancel)?");
 
                 if (indexNums.Contains(userSpaceVenueId))
                 {
