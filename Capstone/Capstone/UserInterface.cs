@@ -241,8 +241,8 @@ namespace Capstone
 
             string userInput = Console.ReadLine();
             return userInput;
-
         }
+
         // Walks a user through searching for a reservation
         public void MakeReservation(int venueId) //This is a bad method, split it up
         {
@@ -267,7 +267,7 @@ namespace Capstone
 
             foreach (Space s in openSpaces)
             {
-                string isAccessible = "";
+                string isAccessible;
 
                 if (s.IsAccessible)
                 {
@@ -314,6 +314,8 @@ namespace Capstone
 
             return;
         }
+
+
 
         // Displays details of a successful reservation
         public void PrintReservationConfirmation()
